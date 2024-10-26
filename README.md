@@ -1,6 +1,6 @@
 # rfd-redirect-stripper
 
-> ⚠️ Unfortunately Google decided to remove this extension from the Chrome Web Store. It can still be built from source and added.
+> ⚠️ Unfortunately Google decided to remove this extension from the Chrome Web Store. It can still be built from source and added to chrome.
 
 <a href="https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/"><img src="https://user-images.githubusercontent.com/585534/107280546-7b9b2a00-6a26-11eb-8f9f-f95932f4bfec.png" alt="Get rfd-redirect-stripper for Firefox"></a>
 <a href="https://chromewebstore.google.com/detail/rfd-redirect-stripper/npnhoaofocjfjcjlglaihlhkbgaokmpa?authuser=0&hl=en"><img src="https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png" alt="Get rfd-redirect-stripper for Chrome"></a>
