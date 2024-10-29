@@ -20,6 +20,6 @@ export function updateRedirects() {
 export function setDefaultConfig() {
   chrome.storage.local.set({
     config:
-    "https://raw.githubusercontent.com/davegallant/rfd-redirect-stripper/main/redirects.json",
+    "https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json",
   });
 }

@@ -29,11 +29,11 @@ jobs:
         with:
           cmd: build
           source: .
-          filename: "rfd-redirect-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
+          filename: "rfd-affiliate-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
           ignoreFiles: '[ "package.json","package-lock.json","yarn.lock" ]'
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
         with:
-          name: "rfd-redirect-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
+          name: "rfd-affiliate-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
           path: ${{ steps.web-ext-build.outputs.target }}

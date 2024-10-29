@@ -5,7 +5,7 @@ const saveButton = document.getElementById("save-button");
 const resetButton = document.getElementById("reset-button");
 
 const defaultConfig =
-  "https://raw.githubusercontent.com/davegallant/rfd-redirect-stripper/main/redirects.json";
+  "https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json";
 
 chrome.storage.local.get("config").then((result) => {
   const value = result.config;

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "rfd-redirect-stripper",
+  "name": "rfd-affiliate-stripper",
   "description": "Strip tracking redirects on rfd",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "content_scripts": [
     {
       "matches": [
