@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         RFD Affiliate Stripper
+// @name         RedFlagDeals Affiliate Stripper
 // @author       Dave Gallant
 // @description  Strip redirect links on forums.redflagdeals.com
 // @downloadURL  https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/script.js
@@ -7,7 +7,7 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/script.js
-// @version      2024-10-26
+// @version      2024-10-30
 // ==/UserScript==
 
 (function() {
