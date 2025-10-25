@@ -33,7 +33,7 @@ jobs:
           ignoreFiles: '[ "package.json","package-lock.json","yarn.lock" ]'
 
       - name: "Upload Artifact"
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: "rfd-affiliate-stripper-${{steps.vars.outputs.version}}-${{steps.vars.outputs.sha_short}}.xpi"
           path: ${{ steps.web-ext-build.outputs.target }}
