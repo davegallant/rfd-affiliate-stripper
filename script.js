@@ -7,7 +7,7 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/script.js
-// @version      2026-02-14
+// @version      2026-02-28
 // ==/UserScript==
 
 (function() {
