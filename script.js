@@ -7,7 +7,7 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/script.js
-// @version      2026-03-12
+// @version      2026-03-13
 // ==/UserScript==
 
 (function() {
@@ -18,7 +18,7 @@
     const REDIRECT_REGEX = [
   {
     "name": "Amazon redirect",
-    "pattern": ".*amazon\\.(?:ca|com)\/gp\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+    "pattern": ".*amazon\\.(?:ca|com)\\/gp\\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
   },
   {
     "name": "Amazon tag",
@@ -152,26 +152,19 @@
 ;
 
     var StripRedirect = function(URL) {
-       var previousURL;
-       do {
-         previousURL = URL;
-         for (var i = 0; i < REDIRECT_REGEX.length; i++) {
-           var rule = REDIRECT_REGEX[i];
-           var result = new RegExp(rule.pattern).exec(URL);
-           if (result) {
-            var newURL = result.groups.baseUrl;
-            if (result.groups.rest) {
-                newURL += (newURL.includes('?') ? '&' : '?') + result.groups.rest;
-            }
-            try {
-                URL = decodeURIComponent(newURL);
-            } catch (e) {
-                console.log(e);
-            }
-            break;
-           }
+       for (var i = 0; i < REDIRECT_REGEX.length; i++) {
+         var rule = REDIRECT_REGEX[i];
+         var result = new RegExp(rule.pattern).exec(URL);
+         if (result) {
+          var newURL = result.groups.baseUrl;
+          try {
+              return decodeURIComponent(newURL);
+          } catch (e) {
+              console.log(e);
+              return URL;
+          }
          }
-       } while (URL !== previousURL);
+       }
        return URL;
     };
 
