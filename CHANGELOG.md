@@ -11,15 +11,12 @@
 - GitHub Actions workflow to run tests on push and pull request
 - Popup now shows success/error feedback when saving or resetting config
 - URL validation on save — checks for valid URL format, reachability, and valid JSON response
-- Runtime permission prompt for host access to avoid Chrome Web Store review delays
 
 ### Changed
 
 - Replaced `chrome.storage` with IndexedDB for persisting config and redirects
 - Content script now requests redirects from the background script via messaging instead of reading from `chrome.storage` directly
 - Content script is registered dynamically via `chrome.scripting` instead of being declared statically in the manifest
-- Host permission moved to `optional_host_permissions` to eliminate in-depth Chrome Web Store review requirement
-- Removed `storage` permission from manifest
 
 ### Removed
 
