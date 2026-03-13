@@ -16,6 +16,10 @@
     "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)/ref=[^?]*(?:\\?(?<rest>\\S+))?$"
   },
   {
+    "name": "Amazon search tracking params",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)/.*/dp/[A-Z0-9]+)\\?\\S+"
+  },
+  {
     "name": "Best Buy",
     "pattern": "bestbuyca.(.*).net(.*)\\?u=(?<baseUrl>.*)"
   },

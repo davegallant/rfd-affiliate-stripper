@@ -106,7 +106,7 @@ describe("Amazon ref path segment", () => {
       "https://www.amazon.ca/BenQ-Monitor/dp/B0DBB63XGC/ref=sr_1_1?crid=123&dib=test";
     assert.equal(
       strip(input),
-      "https://www.amazon.ca/BenQ-Monitor/dp/B0DBB63XGC?crid=123&dib=test"
+      "https://www.amazon.ca/BenQ-Monitor/dp/B0DBB63XGC"
     );
   });
 
@@ -126,7 +126,7 @@ describe("Amazon combined tag + ref", () => {
       "https://www.amazon.ca/BenQ-Monitor/dp/B0DBB63XGC/ref=sr_1_1?crid=123&tag=redflagdealsc-20&dib=test";
     assert.equal(
       strip(input),
-      "https://www.amazon.ca/BenQ-Monitor/dp/B0DBB63XGC?crid=123&dib=test"
+      "https://www.amazon.ca/BenQ-Monitor/dp/B0DBB63XGC"
     );
   });
 
@@ -415,15 +415,47 @@ describe("no match", () => {
   });
 });
 
+describe("Amazon search tracking params", () => {
+  it("should strip crid, dib, dib_tag, and keywor tracking params from product URL", () => {
+    const input =
+      "https://www.amazon.ca/BenQ-MA270U-3840x2160-Brightness-Adjustable/dp/B0DBB63XGC?crid=2NC0L1MMU6GUL&dib=eyJ2IjoiMSJ9.YRX_QF7xfyuwLbRK4eDhDD0ge6ByREMzZ2_2d-2tyQrLpGDq_JzNfLdD9tIohutT1-U6yM5Ib-yU1dvTKZUqOasgdMIKFETTb0reWIy6YlH9BmCV1TKmWjyFJlhHdP7oQzB3iP-meiWKBEksviT2TofwNj6XiOprIxkSdvGKrjSJPfk9H2xgdijTYyNYZ3RkkWVgt9r5VNktIA_NAOMbQNb7QplOtW5EL-172yMREVRG3r6piSVWZB5iSTupr3RLh-6EfGL0WFTFNf7w9ftdBYuIHH2fF62JTsUAelU1wHU.lutkaUOcezaW5eFU8StdRu_Ms0COiSd8liK7yo_7FrM&dib_tag=se&keywor";
+    const result = strip(input);
+    assert.equal(
+      result,
+      "https://www.amazon.ca/BenQ-MA270U-3840x2160-Brightness-Adjustable/dp/B0DBB63XGC"
+    );
+  });
+
+  it("should strip search tracking params from amazon.com product URL", () => {
+    const input =
+      "https://www.amazon.com/Some-Product/dp/B0TEST1234?crid=ABC&keywords=test&qid=123&sprefix=te";
+    const result = strip(input);
+    assert.equal(
+      result,
+      "https://www.amazon.com/Some-Product/dp/B0TEST1234"
+    );
+  });
+
+  it("should not modify a clean Amazon product URL with no query params", () => {
+    const input =
+      "https://www.amazon.ca/BenQ-MA270U-3840x2160-Brightness-Adjustable/dp/B0DBB63XGC";
+    assert.equal(strip(input), input);
+  });
+});
+
 describe("real-world URLs", () => {
   it("should fully strip a real Amazon RFD affiliate URL with ref path + tag", () => {
     const input =
       "https://www.amazon.ca/BenQ-MA270U-3840x2160-Brightness-Adjustable/dp/B0DBB63XGC/ref=sr_1_1?crid=2NC0L1MMU6GUL&dib=eyJ2IjoiMSJ9.YRX_QF7xfyuwLbRK4eDhDD0ge6ByREMzZ2_2d-2tyQrLpGDq_JzNfLdD9tIohutT1-U6yM5Ib-yU1dvTKZUqOasgdMIKFETTb0reWIy6YlH9BmCV1TKmWjyFJlhHdP7oQzB3iP-meiWKBEksviT2TofwNj6XiOprIxkSdvGKrjSJPfk9H2xgdijTYyNYZ3RkkWVgt9r5VNktIA_NAOMbQNb7QplOtW5EL-172yMREVRG3r6piSVWZB5iSTupr3RLh-6EfGL0WFTFNf7w9ftdBYuIHH2fF62JTsUAelU1wHU.lutkaUOcezaW5eFU8StdRu_Ms0COiSd8liK7yo_7FrM&dib_tag=se&keywor&tag=redflagdealsc-20";
     const result = strip(input);
+    assert.equal(
+      result,
+      "https://www.amazon.ca/BenQ-MA270U-3840x2160-Brightness-Adjustable/dp/B0DBB63XGC"
+    );
     assert.ok(!result.includes("tag=redflagdealsc"), "affiliate tag should be stripped");
     assert.ok(!result.includes("/ref="), "ref path segment should be stripped");
-    assert.ok(result.includes("crid="), "crid should be preserved");
-    assert.ok(result.includes("dib_tag="), "dib_tag should be preserved");
+    assert.ok(!result.includes("crid="), "search tracking params should be stripped");
+    assert.ok(!result.includes("dib_tag="), "search tracking params should be stripped");
     assert.ok(
       result.includes("/dp/B0DBB63XGC"),
       "product ID should be preserved"
