@@ -33,7 +33,6 @@
     "type": "module"
   },
   "permissions": [
-    "storage",
     "alarms"
   ],
   "browser_specific_settings": {

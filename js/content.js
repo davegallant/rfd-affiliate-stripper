@@ -5,6 +5,9 @@ function stripRedirect(URL, redirectRegex) {
 
     if (result) {
       var newURL = result.groups.baseUrl;
+      if (result.groups.rest) {
+        newURL += (newURL.includes("?") ? "&" : "?") + result.groups.rest;
+      }
       try {
         return decodeURIComponent(newURL);
       } catch (e) {
@@ -20,11 +23,17 @@ function stripRedirect(URL, redirectRegex) {
 function stripRedirects() {
   var Links = document.querySelectorAll("a.postlink, a.autolinker_link");
 
-  chrome.storage.local.get("redirects", function (result) {
-    Links.forEach(function (Link) {
-      var ReferralURL = Link.href;
-      Link.href = stripRedirect(ReferralURL, result["redirects"]);
-    });
+  chrome.runtime.sendMessage({ type: "getRedirects" }, function (response) {
+    if (chrome.runtime.lastError) {
+      console.log("rfd-affiliate-stripper: could not fetch redirects:", chrome.runtime.lastError.message);
+      return;
+    }
+    if (response && response.redirects) {
+      Links.forEach(function (Link) {
+        var ReferralURL = Link.href;
+        Link.href = stripRedirect(ReferralURL, response.redirects);
+      });
+    }
   });
 }
 

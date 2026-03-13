@@ -1,4 +1,4 @@
-import { updateRedirects, setDefaultConfig } from "../js/utils.js"
+import { updateRedirects, setDefaultConfig, dbGet, dbSet } from "../js/utils.js"
 
 const inputField = document.getElementById("input-field");
 const saveButton = document.getElementById("save-button");
@@ -7,8 +7,7 @@ const resetButton = document.getElementById("reset-button");
 const defaultConfig =
   "https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json";
 
-chrome.storage.local.get("config").then((result) => {
-  const value = result.config;
+dbGet("config").then((value) => {
   if (value) {
     inputField.value = value;
   }
@@ -16,12 +15,14 @@ chrome.storage.local.get("config").then((result) => {
 
 saveButton.addEventListener("click", () => {
   const value = inputField.value;
-  chrome.storage.local.set({ config: value });
-  updateRedirects();
+  dbSet("config", value).then(() => {
+    updateRedirects();
+  });
 });
 
 resetButton.addEventListener("click", () => {
-  setDefaultConfig();
-  inputField.value = defaultConfig;
-  updateRedirects();
+  setDefaultConfig().then(() => {
+    inputField.value = defaultConfig;
+    updateRedirects();
+  });
 });

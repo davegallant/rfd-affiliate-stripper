@@ -1,7 +1,11 @@
 [
   {
-    "name": "Amazon",
-    "pattern": ".*amazon\\.(?:ca|com)\/gp\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+    "name": "Amazon redirect",
+    "pattern": ".*amazon\\.(?:ca|com)\\/gp\\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+  },
+  {
+    "name": "Amazon tag",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])tag=[^&]*(?:&(?<rest>\\S+))?$"
   },
   {
     "name": "Best Buy",

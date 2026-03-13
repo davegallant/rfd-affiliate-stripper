@@ -17,8 +17,12 @@
 
     const REDIRECT_REGEX = [
   {
-    "name": "Amazon",
+    "name": "Amazon redirect",
     "pattern": ".*amazon\\.(?:ca|com)\/gp\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+  },
+  {
+    "name": "Amazon tag",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])tag=[^&]*(?:&(?<rest>\\S+))?$"
   },
   {
     "name": "Best Buy",
@@ -145,6 +149,9 @@
          var result = new RegExp(rule.pattern).exec(URL);
          if (result) {
           var newURL = result.groups.baseUrl;
+          if (result.groups.rest) {
+              newURL += (newURL.includes('?') ? '&' : '?') + result.groups.rest;
+          }
           try {
               return decodeURIComponent(newURL);
           } catch (e) {
