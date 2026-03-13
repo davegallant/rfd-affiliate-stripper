@@ -3,6 +3,7 @@
     "web-ext": "^9.0.0"
   },
   "scripts": {
+    "test": "node --test",
     "start:firefox": "web-ext run --source-dir .",
     "build": "web-ext build --overwrite-dest --ignore-files extensions/ --source-dir .",
     "lint": "web-ext lint --source-dir .",

@@ -8,6 +8,14 @@
     "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])tag=[^&]*(?:&(?<rest>\\S+))?$"
   },
   {
+    "name": "Amazon ref query param",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])ref=[^&]*(?:&(?<rest>\\S+))?$"
+  },
+  {
+    "name": "Amazon ref path segment",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)/ref=[^?]*(?:\\?(?<rest>\\S+))?$"
+  },
+  {
     "name": "Best Buy",
     "pattern": "bestbuyca.(.*).net(.*)\\?u=(?<baseUrl>.*)"
   },

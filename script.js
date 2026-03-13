@@ -25,6 +25,14 @@
     "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])tag=[^&]*(?:&(?<rest>\\S+))?$"
   },
   {
+    "name": "Amazon ref query param",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])ref=[^&]*(?:&(?<rest>\\S+))?$"
+  },
+  {
+    "name": "Amazon ref path segment",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)/ref=[^?]*(?:\\?(?<rest>\\S+))?$"
+  },
+  {
     "name": "Best Buy",
     "pattern": "bestbuyca.(.*).net(.*)\\?u=(?<baseUrl>.*)"
   },
@@ -144,22 +152,26 @@
 ;
 
     var StripRedirect = function(URL) {
-       for (var i = 0; i < REDIRECT_REGEX.length; i++) {
-         var rule = REDIRECT_REGEX[i];
-         var result = new RegExp(rule.pattern).exec(URL);
-         if (result) {
-          var newURL = result.groups.baseUrl;
-          if (result.groups.rest) {
-              newURL += (newURL.includes('?') ? '&' : '?') + result.groups.rest;
-          }
-          try {
-              return decodeURIComponent(newURL);
-          } catch (e) {
-              console.log(e);
-              return URL;
-          }
+       var previousURL;
+       do {
+         previousURL = URL;
+         for (var i = 0; i < REDIRECT_REGEX.length; i++) {
+           var rule = REDIRECT_REGEX[i];
+           var result = new RegExp(rule.pattern).exec(URL);
+           if (result) {
+            var newURL = result.groups.baseUrl;
+            if (result.groups.rest) {
+                newURL += (newURL.includes('?') ? '&' : '?') + result.groups.rest;
+            }
+            try {
+                URL = decodeURIComponent(newURL);
+            } catch (e) {
+                console.log(e);
+            }
+            break;
+           }
          }
-       }
+       } while (URL !== previousURL);
        return URL;
     };
 
