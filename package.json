@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "web-ext": "^9.0.0"
+    "web-ext": "^10.0.0"
   },
   "scripts": {
     "test": "node --test",
