@@ -7,7 +7,7 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/script.js
-// @version      2026-03-12
+// @version      2026-03-13
 // ==/UserScript==
 
 (function() {
@@ -17,8 +17,24 @@
 
     const REDIRECT_REGEX = [
   {
-    "name": "Amazon",
-    "pattern": ".*amazon\\.(?:ca|com)\/gp\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+    "name": "Amazon redirect",
+    "pattern": ".*amazon\\.(?:ca|com)\\/gp\\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+  },
+  {
+    "name": "Amazon tag",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])tag=[^&]*(?:&(?<rest>\\S+))?$"
+  },
+  {
+    "name": "Amazon ref query param",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])ref=[^&]*(?:&(?<rest>\\S+))?$"
+  },
+  {
+    "name": "Amazon ref path segment",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)/ref=[^?]*(?:\\?(?<rest>\\S+))?$"
+  },
+  {
+    "name": "Amazon search tracking params",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)/.*/dp/[A-Z0-9]+)\\?\\S+"
   },
   {
     "name": "Best Buy",

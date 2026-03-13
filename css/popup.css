@@ -61,3 +61,30 @@ button#reset-button:disabled {
   color: #928374;
 }
 
+#status-message {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  min-height: 20px;
+  transition: opacity 0.5s ease;
+}
+
+#status-message:empty {
+  display: none;
+}
+
+#status-message.success {
+  background-color: #1e7325;
+  color: #ebdbb2;
+}
+
+#status-message.error {
+  background-color: #cc241d;
+  color: #ebdbb2;
+}
+
+#status-message.fade-out {
+  opacity: 0;
+}
+
