@@ -25,7 +25,7 @@ jobs:
 
       - name: "web-ext build"
         id: web-ext-build
-        uses: kewisch/action-web-ext@v1
+        uses: kewisch/action-web-ext@v2
         with:
           cmd: build
           source: .
