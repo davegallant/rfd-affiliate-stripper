@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.7.0 - 2026-07-23
+
+### Added
+
+- Strip `adclick.g.doubleclick.net` Google Ads redirects
+- Strip `njih.net` (Impact Radius) affiliate redirects
+- Strip stray `subId1` tracking parameters left dangling on destination URLs
+- Strip Amazon `ref_` and `social_share` tracking parameters from mobile/share links
+
+### Fixed
+
+- Redirect stripping no longer rewrites a link to a non-http(s) URL (e.g. `javascript:`), closing a click-triggered DOM XSS path where a crafted forum link's tracking parameter could be replayed back into `href`
+- Tampermonkey userscript (`script.js`) now shares the exact same stripping logic as the browser extension, instead of a hand-copied version that had drifted out of sync (it was missing chained-redirect handling and query param preservation)
+
+### Changed
+
+- `stripRedirect` logic extracted into a shared module (`js/stripRedirect.js`) used by the extension, the userscript template, and the test suite, so the two can no longer diverge silently
+
 ## 0.6.1 - 2026-03-13
 
 ### Added
