@@ -37,6 +37,14 @@
     "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)/.*/dp/[A-Z0-9]+)\\?\\S+"
   },
   {
+    "name": "Amazon ref_ query param",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])ref_=[^&]*(?:&(?<rest>\\S+))?$"
+  },
+  {
+    "name": "Amazon social_share query param",
+    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])social_share=[^&]*(?:&(?<rest>\\S+))?$"
+  },
+  {
     "name": "Best Buy",
     "pattern": "bestbuyca.(.*).net(.*)\\?u=(?<baseUrl>.*)"
   },
@@ -141,6 +149,10 @@
     "pattern": ".*mkr3\\.net.*\\?u=(?<baseUrl>.*)"
   },
   {
+    "name": "njih.net",
+    "pattern": "(.*).njih.net(.*)?u=(?<baseUrl>.*)"
+  },
+  {
     "name": "fintelconnect.com",
     "pattern": ".*fintelconnect\\.com.*\\?u=(?<baseUrl>.*)"
   },
@@ -151,6 +163,14 @@
   {
     "name": "dodxnr.net",
     "pattern": ".*dodxnr\\.net.*\\?u=(?<baseUrl>.*)"
+  },
+  {
+    "name": "doubleclick",
+    "pattern": "adclick\\.g\\.doubleclick\\.net(.*)?adurl=(?<baseUrl>.*)"
+  },
+  {
+    "name": "RFD subId1 tracking param",
+    "pattern": "(?<baseUrl>https?://\\S+?)[&?]subId1=[^&]*(?:&(?<rest>\\S+))?$"
   }
 ]
 ;

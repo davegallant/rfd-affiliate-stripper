@@ -447,6 +447,62 @@ describe("real-world URLs", () => {
   });
 });
 
+describe("njih.net", () => {
+  it("should strip njih.net redirect and trailing subId1", () => {
+    const input =
+      "https://adidas.njih.net/c/341376/356325/5280?u=https://www.adidas.ca/en/argentina-26-home-messi-jersey/KA8117.html&subId1=rfdcb";
+    assert.equal(
+      strip(input),
+      "https://www.adidas.ca/en/argentina-26-home-messi-jersey/KA8117.html"
+    );
+  });
+
+  it("should strip njih.net redirect with no destination path", () => {
+    const input = "https://adidas.njih.net/c/341376/356325/5280?u=https://www.adidas.ca/en&subId1=rfdcb";
+    assert.equal(strip(input), "https://www.adidas.ca/en");
+  });
+});
+
+describe("RFD subId1 tracking param", () => {
+  it("should strip a malformed trailing subId1 with no leading '?'", () => {
+    const input =
+      "https://www.bestbuy.ca/en-ca/product/insignia-portable-air-conditioner-8000-btu-150-sq-ft-coverage-remote-white-black/17168806&subId1=rfdcb";
+    assert.equal(
+      strip(input),
+      "https://www.bestbuy.ca/en-ca/product/insignia-portable-air-conditioner-8000-btu-150-sq-ft-coverage-remote-white-black/17168806"
+    );
+  });
+});
+
+describe("Amazon ref_ and social_share query params", () => {
+  it("should strip ref_ left over after ref is stripped", () => {
+    const input =
+      "https://www.amazon.ca/dp/B0GDRZ319R?ref=cm_sw_r_cso_cp_apan_dp_PGRMF63DVVCPS9A7DMY7&ref_=cm_sw_r_cso_cp_apan_dp_PGRMF63DVVCPS9A7DMY7&social_share=cm_sw_r_cso_cp_apan_dp_PGRMF63DVVCPS9A7DMY7";
+    assert.equal(strip(input), "https://www.amazon.ca/dp/B0GDRZ319R");
+  });
+
+  it("should strip ref_ as the only tracking param and keep unrelated params", () => {
+    const input = "https://www.amazon.ca/dp/B0GLP6G1QB?psc=1&smid=A3DWYIK6Y9EEQB&ref_=chk_typ_imgToDp";
+    assert.equal(strip(input), "https://www.amazon.ca/dp/B0GLP6G1QB?psc=1&smid=A3DWYIK6Y9EEQB");
+  });
+
+  it("should strip ref_ as first param and keep rest", () => {
+    const input = "https://www.amazon.ca/dp/B06XRG5RX6?ref_=chk_typ_imgToDp&th=1";
+    assert.equal(strip(input), "https://www.amazon.ca/dp/B06XRG5RX6?th=1");
+  });
+});
+
+describe("doubleclick", () => {
+  it("should strip adclick.g.doubleclick.net redirect and decode the adurl destination", () => {
+    const input =
+      "https://adclick.g.doubleclick.net/pcs/click?xai=AKAOjsuNxvl2sg6infhg3VWka1SQYsFRawd5hCyiOkma1RN6FvAw2bOeWrtBZgLt6ykar2s1TYM6BdyCBTfY5XpNIEq2KuP1LaJQvPFanRSzlv4h6Sg4LaatejJvnry2tp9VdkJ_0w8ZQ02mepGAVZQTMrMw9y0IxI8ot91EUoMdRapTDcVUz7S4opgFLWGaNfj4UlpVgldPTa5nxTKrr_MzyMrpHUV0B_bVH_z8SjNWdmay0y1GPUVv0wUtvUdwqqQjFat3oUiCeFvHvh8LfSis_7jvrO-eHMNv1Py3bE1-Ix0BBMBweou_tEjm2nHVYC6QuaVV-95XgDwnU-VrFTwWfkQHJbMEaEk6AZa9Ghf12eKX&sai=AMfl-YRfJm882FmqrZRvx0OOcEumsEFuz6eJTkDA6kz2abpD_47aWMxuxAygCgZYT7mw9VG4OE3pkjwQYhycgkM&sig=Cg0ArKJSzO7UyduFr30k&fbs_aeid=%5Bgw_fbsaeid%5D&adurl=https://lp.distributel.ca/al/00/pp-on-en-in-fi2/%3Futm_source%3DKuration%26utm_medium%3DRFD_Sticky%26utm_campaign%3DProspecting";
+    assert.equal(
+      strip(input),
+      "https://lp.distributel.ca/al/00/pp-on-en-in-fi2/?utm_source=Kuration&utm_medium=RFD_Sticky&utm_campaign=Prospecting"
+    );
+  });
+});
+
 describe("malicious baseUrl scheme", () => {
   it("should not rewrite href to a javascript: URI extracted from a redirectingat.com link", () => {
     const input = "https://go.redirectingat.com/?url=javascript:alert(document.domain)";
