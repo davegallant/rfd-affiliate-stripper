@@ -1,34 +1,9 @@
-import { describe, it } from "node:test";
-import { strict as assert } from "node:assert";
-import { readFileSync } from "node:fs";
+const { describe, it } = require("node:test");
+const { strict: assert } = require("node:assert");
+const { readFileSync } = require("node:fs");
+const { stripRedirect } = require("./js/stripRedirect.js");
 
 const redirects = JSON.parse(readFileSync("redirects.json", "utf8"));
-
-function stripRedirect(URL, redirectRegex) {
-  var previousURL;
-  do {
-    previousURL = URL;
-    for (var i = 0; i < redirectRegex.length; i++) {
-      var rule = redirectRegex[i];
-      var result = new RegExp(rule.pattern).exec(URL);
-
-      if (result) {
-        var newURL = result.groups.baseUrl;
-        if (result.groups.rest) {
-          newURL += (newURL.includes("?") ? "&" : "?") + result.groups.rest;
-        }
-        try {
-          URL = decodeURIComponent(newURL);
-        } catch (e) {
-          // ignore decode errors
-        }
-        break;
-      }
-    }
-  } while (URL !== previousURL);
-
-  return URL;
-}
 
 function strip(url) {
   return stripRedirect(url, redirects);
@@ -469,5 +444,23 @@ describe("real-world URLs", () => {
     assert.equal(result, "https://www.amazon.ca/dp/B0DFLGW8MF?th=1");
     assert.ok(!result.includes("ref="), "ref should be stripped");
     assert.ok(result.includes("th=1"), "th param should be preserved");
+  });
+});
+
+describe("malicious baseUrl scheme", () => {
+  it("should not rewrite href to a javascript: URI extracted from a redirectingat.com link", () => {
+    const input = "https://go.redirectingat.com/?url=javascript:alert(document.domain)";
+    assert.equal(strip(input), input);
+  });
+
+  it("should not rewrite href to a javascript: URI extracted from a pxf.io link", () => {
+    const input = "https://something.pxf.io/click?u=javascript:alert(1)";
+    assert.equal(strip(input), input);
+  });
+
+  it("should still strip when the extracted baseUrl is a normal http(s) URL", () => {
+    const input =
+      "https://go.redirectingat.com/?url=https%3A%2F%2Fwww.example.com%2Fproduct";
+    assert.equal(strip(input), "https://www.example.com/product");
   });
 });

@@ -17,26 +17,11 @@
 
     const REDIRECT_REGEX = {{ file.Read "redirects.json" }};
 
-    var StripRedirect = function(URL) {
-       for (var i = 0; i < REDIRECT_REGEX.length; i++) {
-         var rule = REDIRECT_REGEX[i];
-         var result = new RegExp(rule.pattern).exec(URL);
-         if (result) {
-          var newURL = result.groups.baseUrl;
-          try {
-              return decodeURIComponent(newURL);
-          } catch (e) {
-              console.log(e);
-              return URL;
-          }
-         }
-       }
-       return URL;
-    };
+    {{ file.Read "js/stripRedirect.js" }}
 
     Links.forEach(function(Link) {
         var ReferralURL = Link.href;
-        Link.href = StripRedirect(ReferralURL);
+        Link.href = stripRedirect(ReferralURL, REDIRECT_REGEX);
     });
 
 })();

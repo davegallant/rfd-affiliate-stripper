@@ -16,7 +16,6 @@
 
 - Replaced `chrome.storage` with IndexedDB for persisting config and redirects
 - Content script now requests redirects from the background script via messaging instead of reading from `chrome.storage` directly
-- Content script is registered dynamically via `chrome.scripting` instead of being declared statically in the manifest
 
 ### Removed
 
