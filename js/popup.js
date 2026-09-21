@@ -5,6 +5,40 @@ const saveButton = document.getElementById("save-button");
 const resetButton = document.getElementById("reset-button");
 const statusMessage = document.getElementById("status-message");
 
+async function showUpdateStatus() {
+  try {
+    const status = await dbGet('updateStatus');
+    document.getElementById('last-update').textContent = status?.lastSuccess
+      ? `Last rules update: ${new Date(status.lastSuccess).toLocaleString()}`
+      : 'No successful rules update yet; bundled rules are available offline.';
+    document.getElementById('update-error').textContent = status?.error
+      ? `Last update failed: ${status.error}` : '';
+  } catch (error) {
+    document.getElementById('update-error').textContent = `Could not read update status: ${error.message}`;
+  }
+}
+
+async function showActivity() {
+  const count = document.getElementById('activity-count');
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const activity = await chrome.tabs.sendMessage(tab.id, { type: 'getActivity' });
+    count.textContent = `${activity.count} ${activity.count === 1 ? 'link' : 'links'} cleaned on this page`;
+    const list = document.getElementById('activity-links');
+    list.replaceChildren();
+    for (const { original, cleaned } of activity.links) {
+      const item = document.createElement('li');
+      item.textContent = `${original}\n→ ${cleaned}`;
+      list.append(item);
+    }
+  } catch {
+    count.textContent = 'Open an RFD forum page to see cleaned links. Reload pages opened before installation.';
+  }
+}
+
+showActivity();
+showUpdateStatus();
+
 let statusTimeout;
 
 function showStatus(message, type) {
@@ -50,6 +84,7 @@ saveButton.addEventListener("click", async () => {
     showStatus(e.message, "error");
   } finally {
     setButtonsDisabled(false);
+    await showUpdateStatus();
   }
 });
 
@@ -65,5 +100,6 @@ resetButton.addEventListener("click", async () => {
     showStatus("Reset failed: " + e.message, "error");
   } finally {
     setButtonsDisabled(false);
+    await showUpdateStatus();
   }
 });

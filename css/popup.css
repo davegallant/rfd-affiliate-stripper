@@ -1,9 +1,21 @@
 body {
+  width: 380px;
+  padding: 12px;
   background-color: #282828;
   color: #ebdbb2;
   font-family: "Font Name", sans-serif;
   font-size: 16px;
 }
+
+h1 { font-size: 18px; margin-top: 0; }
+label { display: block; margin-bottom: 6px; }
+input[type="text"] { box-sizing: border-box; width: 100%; }
+details { margin-bottom: 16px; }
+summary { cursor: pointer; }
+.hint, #last-update { color: #bdae93; font-size: 13px; }
+#update-error { color: #fb4934; font-size: 13px; }
+#activity-links { max-height: 220px; overflow: auto; padding-left: 22px; }
+#activity-links li { overflow-wrap: anywhere; white-space: pre-wrap; margin-bottom: 12px; font-size: 13px; }
 
 input[type="text"] {
   background-color: #3c3836;
@@ -87,4 +99,3 @@ button#reset-button:disabled {
 #status-message.fade-out {
   opacity: 0;
 }
-
