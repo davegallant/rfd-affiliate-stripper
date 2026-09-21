@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.8.0 - 2026-09-21
+
+### Added
+
+- Clean affiliate links added to a forum page after it loads, including links whose URL or eligible class changes
+- Use bundled redirect rules when cached or remote rules are unavailable, so the extension works on a fresh offline installation
+- Show the current page's cleaned-link count, recent original/destination pairs, and rules-update status in the popup
+- Add a popup link tester that previews the cleaned destination and each matching rule without opening the link
+- Validate remote redirect rules before applying them and retain the last valid rules when an update fails
+
+### Fixed
+
+- Preserve Amazon seller, variant, unrelated parameters, fragments, and encoded query values while removing tracking data
+- Stop cyclic or expanding redirect chains after a bounded number of transformations
+- Keep the Tampermonkey userscript synchronized with the extension's URL-cleaning behavior
+
+### Changed
+
+- Exclude development tests and notes from packaged extension artifacts
+
 ## 0.7.0 - 2026-07-23
 
 ### Added
