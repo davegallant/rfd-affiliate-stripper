@@ -7,7 +7,7 @@
 // @match        *://forums.redflagdeals.com/*
 // @namespace    http://tampermonkey.net/
 // @updateURL    https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/script.js
-// @version      2026-09-19
+// @version      2026-09-21
 // ==/UserScript==
 
 (function() {
@@ -70,7 +70,11 @@
   },
   {
     "name": "sjv.io",
-    "pattern": ".*sjv\\.io.*\\?u=(?<baseUrl>.*)"
+    "pattern": ".*sjv\\.io.*[?&]u=(?<baseUrl>.*?)(?:&subId1=.*)?$"
+  },
+  {
+    "name": "ldw66v.net",
+    "pattern": ".*ldw66v\\.net.*[?&]u=(?<baseUrl>.*)"
   },
   {
     "name": "canadiantire",
