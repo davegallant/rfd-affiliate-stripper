@@ -58,7 +58,20 @@ export async function updateRedirects() {
   }
 }
 
-export async function setDefaultConfig() {
+export async function getRedirects() {
+  try {
+    const cached = await dbGet('redirects');
+    if (Array.isArray(cached)) return cached;
+  } catch (error) {
+    console.log('Could not read cached redirects:', error.message);
+  }
+  const response = await fetch(chrome.runtime.getURL('redirects.json'));
+  if (!response.ok) throw new Error('Could not load bundled redirects');
+  return response.json();
+}
+
+export async function setDefaultConfig(reset = true) {
+  if (!reset && await dbGet('config')) return;
   await dbSet(
     "config",
     "https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json"

@@ -1,4 +1,4 @@
-import { updateRedirects, setDefaultConfig, dbGet } from "../js/utils.js"
+import { updateRedirects, setDefaultConfig, getRedirects } from "../js/utils.js"
 
 function setAlarm() {
   chrome.alarms.get('update-redirects', alarm => {
@@ -13,8 +13,7 @@ chrome.alarms.onAlarm.addListener(() => {
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  setDefaultConfig();
-  updateRedirects();
+  setDefaultConfig(false).then(() => updateRedirects()).catch(console.error);
   setAlarm();
 });
 
@@ -26,8 +25,8 @@ chrome.runtime.onStartup.addListener(() => {
 // Serve redirects from IndexedDB to content scripts via messaging
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "getRedirects") {
-    dbGet("redirects").then((redirects) => {
-      sendResponse({ redirects: redirects || [] });
+    getRedirects().then((redirects) => {
+      sendResponse({ redirects });
     }).catch((error) => {
       console.log("Error fetching redirects from IndexedDB:", error);
       sendResponse({ redirects: [] });
