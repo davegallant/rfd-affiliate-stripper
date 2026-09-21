@@ -1,4 +1,4 @@
-import { updateRedirects, dbGet, DEFAULT_CONFIG_URL } from "../js/utils.js"
+import { updateRedirects, dbGet, getRedirects, DEFAULT_CONFIG_URL } from "../js/utils.js"
 
 const inputField = document.getElementById("input-field");
 const saveButton = document.getElementById("save-button");
@@ -38,6 +38,37 @@ async function showActivity() {
 
 showActivity();
 showUpdateStatus();
+
+const testUrl = document.getElementById('test-url');
+document.getElementById('test-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const result = document.getElementById('test-result');
+  const steps = document.getElementById('test-steps');
+  const button = document.getElementById('test-button');
+  steps.replaceChildren();
+  button.disabled = true;
+  result.textContent = 'Testing…';
+  try {
+    const inspection = inspectRedirect(testUrl.value.trim(), await getRedirects());
+    result.textContent = inspection.url;
+    for (const step of inspection.steps) {
+      const item = document.createElement('li');
+      item.textContent = `${step.rule}: ${step.original}\n→ ${step.cleaned}`;
+      steps.append(item);
+    }
+    if (!inspection.steps.length || inspection.limited) {
+      const item = document.createElement('li');
+      item.textContent = inspection.limited
+        ? 'Stopped at a cycle or the redirect limit; this result may be partially cleaned.'
+        : 'No matching changes; this URL is unchanged.';
+      steps.append(item);
+    }
+  } catch (error) {
+    result.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
 
 let statusTimeout;
 

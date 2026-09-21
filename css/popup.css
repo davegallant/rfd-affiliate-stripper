@@ -16,6 +16,13 @@ summary { cursor: pointer; }
 #update-error { color: #fb4934; font-size: 13px; }
 #activity-links { max-height: 220px; overflow: auto; padding-left: 22px; }
 #activity-links li { overflow-wrap: anywhere; white-space: pre-wrap; margin-bottom: 12px; font-size: 13px; }
+#test-form { border-top: 1px solid #665c54; padding-top: 12px; margin-bottom: 16px; }
+#test-result, #test-steps { overflow-wrap: anywhere; white-space: pre-wrap; font-size: 13px; }
+#test-steps { max-height: 180px; overflow: auto; padding-left: 22px; }
+#test-steps li { margin-bottom: 8px; }
+#test-button { background: #458588; color: #ebdbb2; border: 0; border-radius: 3px; padding: 5px 10px; font-size: 16px; }
+button { cursor: pointer; }
+button:disabled { cursor: wait; }
 
 input[type="text"] {
   background-color: #3c3836;

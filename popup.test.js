@@ -2,6 +2,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const { readFileSync } = require('node:fs');
 const vm = require('node:vm');
+const cleaner = require('./js/stripRedirect.js');
 
 function element() {
   return { textContent: '', value: '', children: [], listeners: {},
@@ -22,6 +23,8 @@ async function popup({ activity, status, unavailable = false } = {}) {
     },
     dbGet: async key => key === 'updateStatus' ? status : undefined,
     DEFAULT_CONFIG_URL: 'https://example.com/rules', updateRedirects: async () => [],
+    getRedirects: async () => [{ name: 'Remove tag', pattern: '(?<baseUrl>https://shop.com/item)\\?tag=.*' }],
+    inspectRedirect: cleaner.inspectRedirect,
     chrome: { tabs: {
       query: async () => [{ id: 42 }],
       sendMessage: async (id, message) => {
@@ -53,4 +56,18 @@ test('popup handles non-RFD tabs and a fresh offline installation', async () => 
   const { elements } = await popup({ unavailable: true });
   assert.match(elements.get('activity-count')?.textContent || '', /Open an RFD/);
   assert.match(elements.get('last-update')?.textContent || '', /No successful/);
+});
+
+test('link tester renders a cleaned destination and applied rules without navigation', async () => {
+  const { elements } = await popup({ unavailable: true });
+  const input = elements.get('test-url');
+  assert.ok(input, 'popup should offer a link tester');
+  input.value = 'https://shop.com/item?tag=rfd';
+  await elements.get('test-form').listeners.submit({ preventDefault() {} });
+  assert.equal(elements.get('test-result').textContent, 'https://shop.com/item');
+  assert.match(elements.get('test-steps').children[0].textContent, /Remove tag/);
+  input.value = 'javascript:alert(1)';
+  await elements.get('test-form').listeners.submit({ preventDefault() {} });
+  assert.match(elements.get('test-result').textContent, /HTTP/);
+  assert.equal(elements.get('test-steps').children.length, 0);
 });
