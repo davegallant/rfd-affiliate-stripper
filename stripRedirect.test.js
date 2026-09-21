@@ -174,6 +174,26 @@ describe("sjv.io", () => {
       "https://something.sjv.io/click?u=https%3A%2F%2Fwww.store.com%2Fitem";
     assert.equal(strip(input), "https://www.store.com/item");
   });
+
+  it("should strip sjv.io when tracking params precede an encoded destination", () => {
+    const input =
+      "https://sportinglifegroup.sjv.io/c/341376/3301585/43095?trafsrc=Affiliates&u=https%3A%2F%2Fwww.sportinglife.ca%2Fen-CA%2Fsearch%3Fq%3DKryptonite&subId1=rfdcb";
+    assert.equal(
+      strip(input),
+      "https://www.sportinglife.ca/en-CA/search?q=Kryptonite"
+    );
+  });
+});
+
+describe("ldw66v.net", () => {
+  it("should strip ldw66v.net redirect with an unencoded destination", () => {
+    const input =
+      "https://footlockerca.ldw66v.net/c/341376/802110/11224?u=https://www.footlocker.ca/en/product/~/41794002.html";
+    assert.equal(
+      strip(input),
+      "https://www.footlocker.ca/en/product/~/41794002.html"
+    );
+  });
 });
 
 describe("Canadian Tire", () => {

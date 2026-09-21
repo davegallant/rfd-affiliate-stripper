@@ -53,7 +53,11 @@
   },
   {
     "name": "sjv.io",
-    "pattern": ".*sjv\\.io.*\\?u=(?<baseUrl>.*)"
+    "pattern": ".*sjv\\.io.*[?&]u=(?<baseUrl>.*?)(?:&subId1=.*)?$"
+  },
+  {
+    "name": "ldw66v.net",
+    "pattern": ".*ldw66v\\.net.*[?&]u=(?<baseUrl>.*)"
   },
   {
     "name": "canadiantire",
