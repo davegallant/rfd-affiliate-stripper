@@ -8,8 +8,8 @@ function setAlarm() {
   });
 }
 
-chrome.alarms.onAlarm.addListener(() => {
-  updateRedirects();
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'update-redirects') updateRedirects().catch(console.error);
 });
 
 chrome.runtime.onInstalled.addListener(() => {

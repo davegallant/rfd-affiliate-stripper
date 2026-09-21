@@ -3,33 +3,39 @@ function isHttpUrl(url) {
 }
 
 function stripRedirect(URL, redirectRegex) {
-  var previousURL;
-  do {
-    previousURL = URL;
-    for (var i = 0; i < redirectRegex.length; i++) {
-      var rule = redirectRegex[i];
-      var result = new RegExp(rule.pattern).exec(URL);
-
-      if (result) {
+  const seen = new Set([URL]);
+  const rules = [];
+  for (const rule of Array.isArray(redirectRegex) ? redirectRegex : []) {
+    try {
+      if (typeof rule?.pattern === 'string') rules.push(new RegExp(rule.pattern));
+    } catch { /* Ignore invalid legacy cached rules. */ }
+  }
+  for (let step = 0; step < 20; step++) {
+    const previousURL = URL;
+    for (const regex of rules) {
+      const result = regex.exec(URL);
+      if (result?.groups?.baseUrl) {
         var newURL = result.groups.baseUrl;
         if (result.groups.rest) {
           newURL += (newURL.includes("?") ? "&" : "?") + result.groups.rest;
         }
         try {
           newURL = decodeURIComponent(newURL);
-        } catch (e) {
-          console.log(e);
-          break;
+        } catch {
+          continue;
         }
         // Never rewrite a link to a non-http(s) scheme (e.g. javascript:),
         // even if a redirect rule's capture group extracted one.
-        if (isHttpUrl(newURL)) {
+        if (isHttpUrl(newURL) && newURL !== URL) {
+          if (seen.has(newURL)) return URL;
           URL = newURL;
+          seen.add(URL);
+          break;
         }
-        break;
       }
     }
-  } while (URL !== previousURL);
+    if (URL === previousURL) break;
+  }
 
   return URL;
 }

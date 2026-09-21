@@ -1,12 +1,9 @@
-import { updateRedirects, setDefaultConfig, dbGet, dbSet } from "../js/utils.js"
+import { updateRedirects, dbGet, DEFAULT_CONFIG_URL } from "../js/utils.js"
 
 const inputField = document.getElementById("input-field");
 const saveButton = document.getElementById("save-button");
 const resetButton = document.getElementById("reset-button");
 const statusMessage = document.getElementById("status-message");
-
-const defaultConfig =
-  "https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json";
 
 let statusTimeout;
 
@@ -29,43 +26,11 @@ function setButtonsDisabled(disabled) {
   resetButton.disabled = disabled;
 }
 
-async function validateAndFetchConfig(url) {
-  try {
-    new URL(url);
-  } catch {
-    throw new Error("Invalid URL format");
-  }
-
-  let res;
-  try {
-    res = await fetch(url);
-  } catch {
-    throw new Error("Failed to fetch URL");
-  }
-
-  if (!res.ok) {
-    throw new Error(`Fetch failed with status ${res.status}`);
-  }
-
-  try {
-    const data = await res.json();
-    if (!Array.isArray(data)) {
-      throw new Error("Config must be a JSON array");
-    }
-    return data;
-  } catch (e) {
-    if (e.message === "Config must be a JSON array") {
-      throw e;
-    }
-    throw new Error("Response is not valid JSON");
-  }
-}
-
 dbGet("config").then((value) => {
   if (value) {
     inputField.value = value;
   }
-});
+}).catch(error => showStatus(error.message, 'error'));
 
 saveButton.addEventListener("click", async () => {
   const value = inputField.value.trim();
@@ -79,9 +44,7 @@ saveButton.addEventListener("click", async () => {
   showStatus("Validating…", "success");
 
   try {
-    await validateAndFetchConfig(value);
-    await dbSet("config", value);
-    await updateRedirects();
+    await updateRedirects(value);
     showStatus("Saved successfully", "success");
   } catch (e) {
     showStatus(e.message, "error");
@@ -95,9 +58,8 @@ resetButton.addEventListener("click", async () => {
   showStatus("Resetting…", "success");
 
   try {
-    await setDefaultConfig();
-    inputField.value = defaultConfig;
-    await updateRedirects();
+    await updateRedirects(DEFAULT_CONFIG_URL);
+    inputField.value = DEFAULT_CONFIG_URL;
     showStatus("Reset to default", "success");
   } catch (e) {
     showStatus("Reset failed: " + e.message, "error");

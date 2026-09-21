@@ -2,6 +2,7 @@
 const DB_NAME = 'rfdAffiliateStripperDB';
 const STORE_NAME = 'config';
 const DB_VERSION = 1;
+export const DEFAULT_CONFIG_URL = 'https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json';
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -27,53 +28,79 @@ export async function dbGet(key) {
     const request = store.get(key);
 
     request.onsuccess = (event) => resolve(event.target.result?.value);
+    transaction.oncomplete = () => db.close();
     request.onerror = (event) => reject(event.target.error);
   });
 }
 
 export async function dbSet(key, value) {
+  return dbSetMany({ [key]: value });
+}
+
+async function dbSetMany(values) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(STORE_NAME, 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
-    const request = store.put({ key, value });
-
-    request.onsuccess = () => resolve(true);
-    request.onerror = (event) => reject(event.target.error);
+    transaction.oncomplete = () => { db.close(); resolve(true); };
+    transaction.onabort = transaction.onerror = () => {
+      db.close(); reject(transaction.error || new Error('Could not save configuration'));
+    };
+    for (const [key, value] of Object.entries(values)) store.put({ key, value });
   });
 }
 
-export async function updateRedirects() {
-  try {
-    const configUrl = await dbGet("config");
-    if (!configUrl) {
-      console.log("No config URL found in IndexedDB");
-      return;
+export function validateRedirects(redirects) {
+  if (!Array.isArray(redirects)) throw new Error('Config must be a JSON array');
+  for (const [index, rule] of redirects.entries()) {
+    try {
+      if (typeof rule?.pattern !== 'string') throw new Error('Missing pattern');
+      // An empty alternative exposes named groups even when the rule does not match.
+      const groups = new RegExp(`(?:${rule.pattern})|`).exec('').groups;
+      if (!groups || !Object.hasOwn(groups, 'baseUrl')) throw new Error('Missing baseUrl capture group');
+    } catch (error) {
+      throw new Error(`Rule ${index + 1}: ${error.message}`);
     }
+  }
+  return redirects;
+}
+
+export async function updateRedirects(configUrl) {
+  try {
+    configUrl = configUrl || await dbGet('config') || DEFAULT_CONFIG_URL;
+    const parsed = new URL(configUrl);
+    if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error('Use an HTTP or HTTPS config URL');
     const res = await fetch(configUrl);
-    const redirects = await res.json();
-    await dbSet("redirects", redirects);
+    if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
+    const redirects = validateRedirects(await res.json());
+    await dbSetMany({ config: configUrl, redirects,
+      updateStatus: { lastSuccess: new Date().toISOString(), error: null } });
+    return redirects;
   } catch (error) {
-    console.log(error);
+    try {
+      const previous = await dbGet('updateStatus');
+      await dbSet('updateStatus', { lastSuccess: previous?.lastSuccess || null, error: error.message });
+    } catch { /* Keep the original update error when storage is unavailable. */ }
+    throw error;
   }
 }
 
 export async function getRedirects() {
   try {
     const cached = await dbGet('redirects');
-    if (Array.isArray(cached)) return cached;
+    if (cached !== undefined) return validateRedirects(cached);
   } catch (error) {
     console.log('Could not read cached redirects:', error.message);
   }
   const response = await fetch(chrome.runtime.getURL('redirects.json'));
   if (!response.ok) throw new Error('Could not load bundled redirects');
-  return response.json();
+  return validateRedirects(await response.json());
 }
 
 export async function setDefaultConfig(reset = true) {
   if (!reset && await dbGet('config')) return;
   await dbSet(
     "config",
-    "https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/main/redirects.json"
+    DEFAULT_CONFIG_URL
   );
 }

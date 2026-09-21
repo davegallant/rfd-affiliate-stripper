@@ -60,3 +60,44 @@ test('initialization preserves an existing custom config URL', async () => {
   await context.setDefaultConfig(false);
   assert.equal(data.get('config'), 'https://example.com/custom.json');
 });
+
+test('invalid remote rules retain the last valid config and record an error', async () => {
+  const oldRules = [{ name: 'Valid', pattern: '(?<baseUrl>https://shop.com)' }];
+  for (const invalid of [{}, [null], [{ pattern: '[' }], [{ pattern: '(https://shop.com)' }],
+    [{ pattern: '\\(?<baseUrl>literal' }]]) {
+    const { context, data } = setup({ config: 'https://old.com/rules', redirects: oldRules,
+      updateStatus: { lastSuccess: '2026-01-01T00:00:00.000Z' } });
+    context.fetch = async () => ({ ok: true, json: async () => invalid });
+    await assert.rejects(context.updateRedirects('https://new.com/rules'));
+    assert.equal(data.get('config'), 'https://old.com/rules');
+    assert.equal(data.get('redirects'), oldRules);
+    assert.equal(data.get('updateStatus').lastSuccess, '2026-01-01T00:00:00.000Z');
+    assert.ok(data.get('updateStatus').error);
+  }
+});
+
+test('successful update fetches once and saves config, rules, and success status', async () => {
+  const { context, data, bundled } = setup();
+  let requests = 0;
+  context.fetch = async url => {
+    requests++; assert.equal(url, 'https://new.com/rules');
+    return { ok: true, json: async () => bundled };
+  };
+  await context.updateRedirects('https://new.com/rules');
+  assert.equal(requests, 1);
+  assert.equal(data.get('config'), 'https://new.com/rules');
+  assert.equal(data.get('redirects'), bundled);
+  assert.ok(data.get('updateStatus').lastSuccess);
+  assert.equal(data.get('updateStatus').error, null);
+});
+
+test('HTTP and network errors are reported without replacing cached rules', async () => {
+  for (const fetch of [async () => ({ ok: false, status: 503 }), async () => { throw new Error('offline'); }]) {
+    const { context, data, bundled } = setup({ config: 'https://example.com/rules' });
+    data.set('redirects', bundled);
+    context.fetch = fetch;
+    await assert.rejects(context.updateRedirects());
+    assert.equal(data.get('redirects'), bundled);
+    assert.ok(data.get('updateStatus').error);
+  }
+});
