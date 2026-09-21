@@ -64,7 +64,10 @@ test('initialization preserves an existing custom config URL', async () => {
 test('invalid remote rules retain the last valid config and record an error', async () => {
   const oldRules = [{ name: 'Valid', pattern: '(?<baseUrl>https://shop.com)' }];
   for (const invalid of [{}, [null], [{ pattern: '[' }], [{ pattern: '(https://shop.com)' }],
-    [{ pattern: '\\(?<baseUrl>literal' }]]) {
+    [{ pattern: '\\(?<baseUrl>literal' }],
+    [{ pattern: '(?<baseUrl>.*)', removeParams: 'tag' }],
+    [{ pattern: '(?<baseUrl>.*)', destinationParam: 5 }],
+    [{ pattern: '(?<baseUrl>.*)', removePathRef: 'yes' }]]) {
     const { context, data } = setup({ config: 'https://old.com/rules', redirects: oldRules,
       updateStatus: { lastSuccess: '2026-01-01T00:00:00.000Z' } });
     context.fetch = async () => ({ ok: true, json: async () => invalid });

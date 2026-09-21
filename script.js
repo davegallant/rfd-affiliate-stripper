@@ -18,31 +18,38 @@
     const REDIRECT_REGEX = [
   {
     "name": "Amazon redirect",
-    "pattern": ".*amazon\\.(?:ca|com)\\/gp\\/redirect\\.html\\?ie=UTF8&location=(?<baseUrl>.*?)(?:&|ref%3D|%3F)"
+    "pattern": "^https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/gp/redirect\\.html\\?(?:[^#]*&)?location=(?<baseUrl>[^&#]+)",
+    "destinationParam": "location"
   },
   {
     "name": "Amazon tag",
-    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])tag=[^&]*(?:&(?<rest>\\S+))?$"
+    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]tag=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
+    "removeParams": ["tag"]
   },
   {
     "name": "Amazon ref query param",
-    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])ref=[^&]*(?:&(?<rest>\\S+))?$"
+    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]ref=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
+    "removeParams": ["ref"]
   },
   {
     "name": "Amazon ref path segment",
-    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)/ref=[^?]*(?:\\?(?<rest>\\S+))?$"
+    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^?#]*?)/ref=[^?#]*(?:\\?(?<rest>[^#]+))?(?:#.*)?$",
+    "removePathRef": true
   },
   {
     "name": "Amazon search tracking params",
-    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)/.*/dp/[A-Z0-9]+)\\?\\S+"
+    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/(?:[^?#]*/)?(?:dp|gp/product)/[A-Z0-9]+[^?#]*?(?:\\?[^#]*?)?)[?&](?:crid|dib|dib_tag|keywords|keywor|qid|sprefix)(?:=[^&#]*)?(?:&(?<rest>[^#]+))?(?:#.*)?$",
+    "removeParams": ["crid", "dib", "dib_tag", "keywords", "keywor", "qid", "sprefix"]
   },
   {
     "name": "Amazon ref_ query param",
-    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])ref_=[^&]*(?:&(?<rest>\\S+))?$"
+    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]ref_=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
+    "removeParams": ["ref_"]
   },
   {
     "name": "Amazon social_share query param",
-    "pattern": "(?<baseUrl>https?://.*amazon\\.(?:ca|com)\\S+?)(?:[?&])social_share=[^&]*(?:&(?<rest>\\S+))?$"
+    "pattern": "^(?<baseUrl>https?://(?:[a-zA-Z0-9-]+\\.)*amazon\\.(?:ca|com)/[^#]*?)[?&]social_share=[^&#]*(?:&(?<rest>[^#]+))?(?:#.*)?$",
+    "removeParams": ["social_share"]
   },
   {
     "name": "Best Buy",
@@ -180,43 +187,83 @@
 ;
 
     function isHttpUrl(url) {
-  return /^https?:\/\//i.test(url);
+  try {
+    return /^https?:\/\//i.test(url) && ['http:', 'https:'].includes(new URL(url).protocol);
+  } catch { return false; }
 }
 
 function stripRedirect(URL, redirectRegex) {
-  var previousURL;
-  do {
-    previousURL = URL;
-    for (var i = 0; i < redirectRegex.length; i++) {
-      var rule = redirectRegex[i];
-      var result = new RegExp(rule.pattern).exec(URL);
+  if (!isHttpUrl(URL)) return URL;
+  return inspectRedirect(URL, redirectRegex).url;
+}
 
-      if (result) {
-        var newURL = result.groups.baseUrl;
-        if (result.groups.rest) {
-          newURL += (newURL.includes("?") ? "&" : "?") + result.groups.rest;
-        }
+function applyRedirectRule(input, rule, groups) {
+  if (rule.destinationParam || rule.removeParams || rule.removePathRef) {
+    const parsed = new URL(input);
+    if (rule.destinationParam) return parsed.searchParams.get(rule.destinationParam);
+    if (rule.removeParams) {
+      // Filter raw pairs so retained values are never decoded or re-encoded.
+      const retained = parsed.search.slice(1).split('&').filter(pair => {
+        const key = new URLSearchParams(pair).keys().next().value;
+        return !rule.removeParams.includes(key);
+      });
+      parsed.search = retained.join('&');
+    }
+    if (rule.removePathRef) parsed.pathname = parsed.pathname.replace(/\/ref=[^/]*$/, '');
+    return parsed.href;
+  }
+  let destination = groups.baseUrl;
+  if (groups.rest) destination += (destination.includes('?') ? '&' : '?') + groups.rest;
+  if (input.startsWith(groups.baseUrl)) {
+    // In-place removal is not another layer of URL encoding.
+    const fragment = new URL(input).hash;
+    return destination + (destination.includes('#') ? '' : fragment);
+  }
+  return decodeURIComponent(destination);
+}
+
+function inspectRedirect(URL, redirectRegex) {
+  if (!isHttpUrl(URL)) throw new Error('Enter a valid HTTP or HTTPS URL');
+  const steps = [];
+  const seen = new Set([URL]);
+  const rules = [];
+  for (const rule of Array.isArray(redirectRegex) ? redirectRegex : []) {
+    try {
+      if (typeof rule?.pattern === 'string') rules.push({
+        regex: new RegExp(rule.pattern), name: rule.name || 'Unnamed rule', rule,
+      });
+    } catch { /* Ignore invalid legacy cached rules. */ }
+  }
+  for (let step = 0; step < 20; step++) {
+    const previousURL = URL;
+    for (const { regex, name, rule } of rules) {
+      const result = regex.exec(URL);
+      if (result?.groups?.baseUrl) {
+        let newURL;
         try {
-          newURL = decodeURIComponent(newURL);
-        } catch (e) {
-          console.log(e);
-          break;
+          newURL = applyRedirectRule(URL, rule, result.groups);
+        } catch {
+          continue;
         }
         // Never rewrite a link to a non-http(s) scheme (e.g. javascript:),
         // even if a redirect rule's capture group extracted one.
-        if (isHttpUrl(newURL)) {
+        if (isHttpUrl(newURL) && newURL !== URL) {
+          if (seen.has(newURL)) return { url: URL, steps, limited: true };
+          steps.push({ rule: name, original: URL, cleaned: newURL });
           URL = newURL;
+          seen.add(URL);
+          break;
         }
-        break;
       }
     }
-  } while (URL !== previousURL);
+    if (URL === previousURL) return { url: URL, steps, limited: false };
+  }
 
-  return URL;
+  return { url: URL, steps, limited: true };
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { stripRedirect, isHttpUrl };
+  module.exports = { stripRedirect, inspectRedirect, isHttpUrl };
 }
 
 

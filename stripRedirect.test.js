@@ -29,13 +29,13 @@ describe("Amazon tag", () => {
   it("should strip tag as last query param", () => {
     const input =
       "https://www.amazon.ca/dp/B0DFLGW8MF?crid=123&dib=test&tag=redflagdealsc-20";
-    assert.equal(strip(input), "https://www.amazon.ca/dp/B0DFLGW8MF?crid=123&dib=test");
+    assert.equal(strip(input), "https://www.amazon.ca/dp/B0DFLGW8MF");
   });
 
   it("should strip tag as first query param and keep rest", () => {
     const input =
       "https://www.amazon.ca/dp/B0DFLGW8MF?tag=redflagdealsc-20&crid=123&dib=test";
-    assert.equal(strip(input), "https://www.amazon.ca/dp/B0DFLGW8MF?crid=123&dib=test");
+    assert.equal(strip(input), "https://www.amazon.ca/dp/B0DFLGW8MF");
   });
 
   it("should strip tag as only query param", () => {

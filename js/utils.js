@@ -55,6 +55,15 @@ export function validateRedirects(redirects) {
   for (const [index, rule] of redirects.entries()) {
     try {
       if (typeof rule?.pattern !== 'string') throw new Error('Missing pattern');
+      if (rule.destinationParam !== undefined && (typeof rule.destinationParam !== 'string' || !rule.destinationParam)) {
+        throw new Error('destinationParam must be a non-empty string');
+      }
+      if (rule.removeParams !== undefined && (!Array.isArray(rule.removeParams) || !rule.removeParams.every(key => typeof key === 'string'))) {
+        throw new Error('removeParams must be an array of strings');
+      }
+      if (rule.removePathRef !== undefined && typeof rule.removePathRef !== 'boolean') {
+        throw new Error('removePathRef must be a boolean');
+      }
       // An empty alternative exposes named groups even when the rule does not match.
       const groups = new RegExp(`(?:${rule.pattern})|`).exec('').groups;
       if (!groups || !Object.hasOwn(groups, 'baseUrl')) throw new Error('Missing baseUrl capture group');

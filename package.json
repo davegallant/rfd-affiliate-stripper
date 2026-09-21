@@ -3,9 +3,9 @@
     "web-ext": "^10.2.0"
   },
   "scripts": {
-    "test": "node --test",
+    "test": "node --test *.test.js",
     "start:firefox": "web-ext run --source-dir .",
-    "build": "web-ext build --overwrite-dest --ignore-files extensions/ --source-dir .",
+    "build": "web-ext build --overwrite-dest --source-dir . --ignore-files extensions/ 'docs/**' '*.test.js' 'web-ext-artifacts/**'",
     "lint": "web-ext lint --source-dir .",
     "sign": "web-ext sign --source-dir ."
   }
