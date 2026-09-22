@@ -1,0 +1,136 @@
+name: "Publish browser extension"
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing version tag to publish, for example v0.8.0"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  credentials:
+    runs-on: ubuntu-latest
+    outputs:
+      chrome: ${{ steps.check.outputs.chrome }}
+      firefox: ${{ steps.check.outputs.firefox }}
+    steps:
+      - id: check
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+        run: |
+          if [[ -n "$CWS_CLIENT_ID" && -n "$CWS_CLIENT_SECRET" && -n "$CWS_REFRESH_TOKEN" && -n "$CWS_PUBLISHER_ID" && -n "$CWS_EXTENSION_ID" ]]; then
+            echo "chrome=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "chrome=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [[ -n "$AMO_JWT_ISSUER" && -n "$AMO_JWT_SECRET" ]]; then
+            echo "firefox=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "firefox=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  package:
+    needs: credentials
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Verify tag matches manifest version
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+        run: |
+          VERSION=$(node -p "require('./manifest.json').version")
+          test "$RELEASE_TAG" = "v$VERSION"
+      - run: npm test
+      - run: npm run lint
+      - run: npm run build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: chrome-package
+          path: web-ext-artifacts/*.zip
+          if-no-files-found: error
+
+  publish-chrome:
+    needs: [credentials, package]
+    if: needs.credentials.outputs.chrome == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: chrome-package
+          path: dist
+      - name: Upload and submit to Chrome Web Store
+        env:
+          CWS_CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CWS_CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          CWS_EXTENSION_ID: ${{ secrets.CWS_EXTENSION_ID }}
+          CWS_PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
+          CWS_REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+        run: |
+          PACKAGE=$(find dist -maxdepth 1 -type f -name '*.zip' -print -quit)
+          test -n "$PACKAGE"
+          ACCESS_TOKEN=$(curl --fail-with-body --silent --show-error \
+            --data-urlencode "client_id=$CWS_CLIENT_ID" \
+            --data-urlencode "client_secret=$CWS_CLIENT_SECRET" \
+            --data-urlencode "refresh_token=$CWS_REFRESH_TOKEN" \
+            --data-urlencode "grant_type=refresh_token" \
+            https://oauth2.googleapis.com/token | jq -er '.access_token')
+          echo "::add-mask::$ACCESS_TOKEN"
+          ITEM="publishers/$CWS_PUBLISHER_ID/items/$CWS_EXTENSION_ID"
+          curl --fail-with-body --silent --show-error --output /dev/null \
+            --request POST --upload-file "$PACKAGE" \
+            --header "Authorization: Bearer $ACCESS_TOKEN" \
+            "https://chromewebstore.googleapis.com/upload/v2/$ITEM:upload"
+          curl --fail-with-body --silent --show-error --output /dev/null \
+            --request POST --header "Authorization: Bearer $ACCESS_TOKEN" \
+            "https://chromewebstore.googleapis.com/v2/$ITEM:publish"
+
+  publish-firefox:
+    needs: [credentials, package]
+    if: needs.credentials.outputs.firefox == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Build Firefox package
+        id: firefox-package
+        uses: kewisch/action-web-ext@v2
+        with:
+          cmd: build
+          source: .
+          filename: "rfd-affiliate-stripper-{version}.xpi"
+          ignoreFiles: '[ "package.json", "package-lock.json", "yarn.lock", "*.test.js", "docs/**", "web-ext-artifacts/**", "extensions/**" ]'
+      - name: Submit to Firefox Add-ons
+        uses: kewisch/action-web-ext@v2
+        with:
+          cmd: sign
+          source: ${{ steps.firefox-package.outputs.target }}
+          channel: listed
+          apiKey: ${{ secrets.AMO_JWT_ISSUER }}
+          apiSecret: ${{ secrets.AMO_JWT_SECRET }}
+          timeout: 900000
+          approvalTimeout: 0

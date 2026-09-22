@@ -75,3 +75,16 @@ npm run build
 ```
 
 Tests cover cleaning, dynamic-link handling, rule updates, popup activity, and the link tester. Test discovery excludes old build artifacts; extension packages exclude tests and development notes.
+
+## Store publishing
+
+The [publish workflow](.github/workflows/publish.yaml) runs when a `v*` tag is pushed. It verifies that the tag matches `manifest.json`, runs tests and linting, builds the Chrome ZIP, and then submits configured stores for review. It can also be run manually with an existing tag, which is useful for publishing a version tagged before store credentials were configured.
+
+Create the store listings and finish their required dashboard fields before enabling automation. Add these repository Actions secrets:
+
+| Store | Required secrets |
+| --- | --- |
+| Chrome Web Store | `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`, `CWS_REFRESH_TOKEN`, `CWS_PUBLISHER_ID`, `CWS_EXTENSION_ID` |
+| Firefox Add-ons | `AMO_JWT_ISSUER`, `AMO_JWT_SECRET` |
+
+Chrome credentials are an OAuth client ID/secret and refresh token with the `chromewebstore` scope. The publisher and extension IDs come from the Chrome Developer Dashboard. Firefox credentials are the AMO API key and secret. Store jobs skip until each store’s complete set of secrets is configured. Both stores may still review a submitted version before it becomes public.
