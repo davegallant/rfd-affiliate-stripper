@@ -1,72 +1,36 @@
-# rfd-affiliate-stripper
+# RFD Affiliate Stripper
 
-<a href="https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/"><img src="https://user-images.githubusercontent.com/585534/107280546-7b9b2a00-6a26-11eb-8f9f-f95932f4bfec.png" alt="Get rfd-affiliate-stripper for Firefox"></a>
-<a href="https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo?authuser=0&hl=en"><img src="https://user-images.githubusercontent.com/585534/107280622-91a8ea80-6a26-11eb-8d07-77c548b28665.png" alt="Get rfd-affiliate-stripper for Chrome"></a>
+Remove affiliate redirects and tracking parameters from deal links on [RedFlagDeals forums](https://forums.redflagdeals.com/). The extension cleans supported links as a page loads and when new posts or links appear, so you can follow the destination directly. It can also help with redirect links that fail when an ad blocker is enabled.
 
-Strips affiliate redirects from deal links posted on RFD.
+[Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Install for Chrome](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
-The extension cleans deal links on page load and when posts or links change. It transforms a link with tracking such as
+<img src="docs/images/popup.png" alt="Extension popup showing one cleaned link, the link tester, and the configuration URL" width="425">
 
-```
-http://www.amazon.ca/gp/redirect.html?ie=UTF8&location=https%3A%2F%2Fwww.amazon.ca%2Fdp%2FB09YXY3DKN%3Fref%3Dcm_sw_r_apan_dp_NX4HJ8HZ3XX2YK1J900A%26ref_%3Dcm_sw_r_apan_dp_NX4HJ8HZ3XX2YK1J900A%26social_share%3Dcm_sw_r_apan_dp_NX4HJ8HZ3XX2YK1J900A%26starsLeft%3D1%26skipTwisterOG%3D1&tag=redflagdealsc-20&linkCode=ur2&camp=15121&creative=330641
-```
+## How it works
 
-into
+On `forums.redflagdeals.com`, the extension checks links in posts against its [redirect rules](redirects.json). For example, a `go.redirectingat.com` link containing an encoded Amazon product URL is replaced with the direct `amazon.ca/dp/...` link. Amazon rules also remove selected tracking parameters while preserving unrelated query values, seller and variant information, and URL fragments. Search keywords remain on Amazon search pages.
 
-```
-https://www.amazon.ca/dp/B09YXY3DKN?starsLeft=1&skipTwisterOG=1
-```
-
-## Why?
-
-This helps navigate around broken links when using certain adblockers.
+Only matching links are changed. If you installed the extension while an RFD tab was already open, reload that tab to start cleaning links and see its activity in the popup.
 
 ## Using the popup
 
-- See how many distinct links were cleaned on the current forum page and expand the last 50 original/destination pairs. This activity stays in the page's memory and resets on reload.
-- Paste a URL into **Test a link** to preview the destination and applied rules without visiting the link. A warning identifies redirect chains that hit a cycle or the step limit.
-- Check the last successful rules update and any update error. Reload forum tabs opened before installing the extension to enable cleaning and activity reporting.
+- **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and resets on reload.
+- **Test a link:** Paste an HTTP or HTTPS URL to preview the result and each rule applied. The tester does not open the destination. It reports invalid URLs and warns if cleaning stops at a cycle or the 20-step limit.
+- **Rules status:** Shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
+- **Config URL:** Enter the URL of a trusted JSON rules file and select **Save** to validate and use it. **Reset** restores the default URL. Reload open forum pages after changing rules; the popup tester uses the current rules immediately.
 
-Amazon cleanup preserves seller, variant, unrelated query values, and fragments. Search-related tracking is removed on product pages; search keywords remain intact on search pages.
+The extension checks for updated rules hourly. If a download or validation fails, it keeps the last valid rules and shows the error in the popup.
 
-## Building the extension
+## Running from source
 
-To build the extension, run:
+Requires Node.js and npm. To run the extension in Firefox during development:
 
 ```sh
-npm install
-npm run build
+npm ci
+npm run start:firefox
 ```
 
-## Updating redirects
-
-The browser extension checks for the latest [redirects.json](redirects.json) hourly. Bundled rules work immediately when there is no usable cached configuration, including offline. Failed or invalid updates retain the last valid rules and appear in the popup.
-
-Saving a custom config validates all rules before replacing the URL and cached rules together. Extension upgrades preserve the custom URL. Changes apply to forum pages when they are reloaded; the popup link tester uses the current rules immediately.
-
-Each rule requires a regex `pattern` with a named `baseUrl` capture; `name` labels the rule in the tester. Rules can also declare `destinationParam` to extract and decode one query value, `removeParams` (an array of parameter names) to preserve the encoding of retained values, or `removePathRef` to remove a trailing `/ref=...` path segment. These operations apply only when the rule's pattern matches. Legacy regex-only rules remain supported. Use only trusted rule sources; regex validation and redirect limits do not bound the runtime of an individual regex.
-
-Open a pull request to this repo to update the redirects.
-
-An easy way to test regex: [regex101.com](https://regex101.com/).
-
-New config can be tested by pointing the config url of the extension to your own branch.
-
-For example:
-
-```text
-https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/my-new-branch/redirects.json
-```
-
-## Tampermonkey Script
-
-This was originally a [Tampermonkey](https://www.tampermonkey.net/) userscript before evolving into a browser extension.
-
-To use as a tampermonkey script, copy [script.js](./script.js) into Tampermonkey.
-
-The userscript includes the same cleaning rules and URL-preservation logic. Dynamic link monitoring and the popup features are provided by the browser extension.
-
-## Checks
+To run the checks and build a package in `web-ext-artifacts/`:
 
 ```sh
 npm test
@@ -74,17 +38,37 @@ npm run lint
 npm run build
 ```
 
-Tests cover cleaning, dynamic-link handling, rule updates, popup activity, and the link tester. Test discovery excludes old build artifacts; extension packages exclude tests and development notes.
+## Contributing redirect rules
+
+Rules live in [redirects.json](redirects.json). Open a pull request to add or update a rule. To try rules from your branch, set **Config URL** in the popup to its raw JSON file, for example:
+
+```text
+https://raw.githubusercontent.com/davegallant/rfd-affiliate-stripper/my-new-branch/redirects.json
+```
+
+The file must contain a JSON array. Every rule needs a regex `pattern` with a named `baseUrl` capture group. An optional `name` labels it in the link tester. Supported operations are:
+
+| Field | Effect |
+| --- | --- |
+| `destinationParam` | Read the destination URL from this query parameter. |
+| `removeParams` | Remove the listed query parameters while preserving the encoding of retained values. |
+| `removePathRef` | Remove a trailing `/ref=...` path segment. |
+
+These operations run only when the rule's pattern matches. Rules using only a regex remain supported. The extension accepts only HTTP or HTTPS destinations and stops after 20 cleaning steps or a cycle. Use trusted rule sources: validation and redirect limits do not bound the runtime of an individual regex. [regex101.com](https://regex101.com/) can help test a pattern.
+
+## Tampermonkey userscript
+
+The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript. You can copy [script.js](script.js) into Tampermonkey if you prefer that format. It contains the cleaning rules and URL preservation logic, but the browser extension provides dynamic link monitoring, rule updates, and the popup.
 
 ## Store publishing
 
-The [publish workflow](.github/workflows/publish.yaml) runs when a `v*` tag is pushed. It verifies that the tag matches `manifest.json`, runs tests and linting, builds the Chrome ZIP, and then submits configured stores for review. It can also be run manually with an existing tag, which is useful for publishing a version tagged before store credentials were configured.
+The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags and can be started manually with an existing tag. The tag must match the version in [manifest.json](manifest.json). It runs tests and linting, builds the package, and submits to stores whose credentials are configured. Store review may still be required before a version becomes public.
 
-Create the store listings and finish their required dashboard fields before enabling automation. Add these repository Actions secrets:
+Complete the store listings in their dashboards, then add these GitHub Actions secrets:
 
 | Store | Required secrets |
 | --- | --- |
 | Chrome Web Store | `CWS_CLIENT_ID`, `CWS_CLIENT_SECRET`, `CWS_REFRESH_TOKEN`, `CWS_PUBLISHER_ID`, `CWS_EXTENSION_ID` |
 | Firefox Add-ons | `AMO_JWT_ISSUER`, `AMO_JWT_SECRET` |
 
-Chrome credentials are an OAuth client ID/secret and refresh token with the `chromewebstore` scope. The publisher and extension IDs come from the Chrome Developer Dashboard. Firefox credentials are the AMO API key and secret. Store jobs skip until each store’s complete set of secrets is configured. Both stores may still review a submitted version before it becomes public.
+Chrome uses an OAuth client and refresh token with the `chromewebstore` scope, plus IDs from the Chrome Developer Dashboard. Firefox uses an AMO API key and secret. A store's publishing job is skipped until all its secrets are present.
