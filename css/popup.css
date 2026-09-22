@@ -1,9 +1,43 @@
+:root {
+  color-scheme: light;
+  --surface: #ffffff;
+  --surface-input: #f6f8fa;
+  --text: #1f2328;
+  --text-muted: #59636e;
+  --border: #d1d9e0;
+  --primary: #0969da;
+  --primary-hover: #0860ca;
+  --success: #1f883d;
+  --danger: #cf222e;
+  --button-text: #ffffff;
+  --disabled-surface: #eff2f5;
+  --disabled-text: #818b98;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --surface: #0d1117;
+    --surface-input: #161b22;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --border: #30363d;
+    --primary: #1f6feb;
+    --primary-hover: #388bfd;
+    --success: #238636;
+    --danger: #da3633;
+    --button-text: #ffffff;
+    --disabled-surface: #21262d;
+    --disabled-text: #6e7681;
+  }
+}
+
 body {
   width: 380px;
   padding: 12px;
-  background-color: #282828;
-  color: #ebdbb2;
-  font-family: "Font Name", sans-serif;
+  background-color: var(--surface);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
   font-size: 16px;
 }
 
@@ -12,21 +46,21 @@ label { display: block; margin-bottom: 6px; }
 input[type="text"] { box-sizing: border-box; width: 100%; }
 details { margin-bottom: 16px; }
 summary { cursor: pointer; }
-.hint, #last-update { color: #bdae93; font-size: 13px; }
-#update-error { color: #fb4934; font-size: 13px; }
+.hint, #last-update { color: var(--text-muted); font-size: 13px; }
+#update-error { color: var(--danger); font-size: 13px; }
 #activity-links { max-height: 220px; overflow: auto; padding-left: 22px; }
 #activity-links li { overflow-wrap: anywhere; white-space: pre-wrap; margin-bottom: 12px; font-size: 13px; }
-#test-form { border-top: 1px solid #665c54; padding-top: 12px; margin-bottom: 16px; }
+#test-form { border-top: 1px solid var(--border); padding-top: 12px; margin-bottom: 16px; }
 #test-result, #test-steps { overflow-wrap: anywhere; white-space: pre-wrap; font-size: 13px; }
 #test-steps { max-height: 180px; overflow: auto; padding-left: 22px; }
 #test-steps li { margin-bottom: 8px; }
-#test-button { background: #458588; color: #ebdbb2; border: 0; border-radius: 3px; padding: 5px 10px; font-size: 16px; }
+#test-button { background: var(--primary); color: var(--button-text); border: 0; border-radius: 3px; padding: 5px 10px; font-size: 16px; }
 button { cursor: pointer; }
 button:disabled { cursor: wait; }
 
 input[type="text"] {
-  background-color: #3c3836;
-  color: #ebdbb2;
+  background-color: var(--surface-input);
+  color: var(--text);
   border: none;
   border-radius: 3px;
   padding: 5px;
@@ -35,8 +69,8 @@ input[type="text"] {
 }
 
 button#save-button {
-  background-color: #1e7325;
-  color: #ebdbb2;
+  background-color: var(--success);
+  color: var(--button-text);
   border: none;
   border-radius: 3px;
   padding: 5px 10px;
@@ -44,7 +78,7 @@ button#save-button {
 }
 
 button#save-button:hover {
-  background-color: #83a598;
+  background-color: var(--primary-hover);
 }
 
 button#save-button:active {
@@ -53,13 +87,13 @@ button#save-button:active {
 }
 
 button#save-button:disabled {
-  background-color: #a89984;
-  color: #928374;
+  background-color: var(--disabled-surface);
+  color: var(--disabled-text);
 }
 
 button#reset-button {
-  background-color: #458588;
-  color: #ebdbb2;
+  background-color: var(--primary);
+  color: var(--button-text);
   border: none;
   border-radius: 3px;
   padding: 5px 10px;
@@ -67,7 +101,7 @@ button#reset-button {
 }
 
 button#reset-button:hover {
-  background-color: #83a598;
+  background-color: var(--primary-hover);
 }
 
 button#reset-button:active {
@@ -76,8 +110,8 @@ button#reset-button:active {
 }
 
 button#reset-button:disabled {
-  background-color: #a89984;
-  color: #928374;
+  background-color: var(--disabled-surface);
+  color: var(--disabled-text);
 }
 
 #status-message {
@@ -94,13 +128,13 @@ button#reset-button:disabled {
 }
 
 #status-message.success {
-  background-color: #1e7325;
-  color: #ebdbb2;
+  background-color: var(--success);
+  color: var(--button-text);
 }
 
 #status-message.error {
-  background-color: #cc241d;
-  color: #ebdbb2;
+  background-color: var(--danger);
+  color: var(--button-text);
 }
 
 #status-message.fade-out {
