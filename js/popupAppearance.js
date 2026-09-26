@@ -1,0 +1,47 @@
+(() => {
+  const fields = {
+    enabled: document.getElementById('modern-enabled'), theme: document.getElementById('modern-theme'),
+    density: document.getElementById('modern-density'), fontSize: document.getElementById('modern-font-size'),
+    contentWidth: document.getElementById('modern-content-width'), hidePromotions: document.getElementById('modern-hide-promotions'),
+    hideSignatures: document.getElementById('modern-hide-signatures'), compactProfiles: document.getElementById('modern-compact-profiles'),
+  };
+  if (Object.values(fields).some(field => !field)) return;
+  const settings = globalThis.RFDModern.settings;
+  const status = document.getElementById('appearance-status');
+  const pageStatus = document.getElementById('theme-page-status');
+  let saved = settings.DEFAULTS, chain = Promise.resolve(), rendering = false;
+  function render(value) {
+    rendering = true;
+    for (const [name, field] of Object.entries(fields)) {
+      if (field.type === 'checkbox') field.checked = value[name];
+      else field.value = String(value[name]);
+      if (name !== 'enabled') field.disabled = !value.enabled;
+    }
+    rendering = false;
+  }
+  render(saved);
+  settings.load().then(value => { saved = value; render(value); }).catch(error => { status.textContent = error.message; });
+  settings.subscribe(value => { saved = value; render(value); });
+  function save(name, value) {
+    chain = chain.catch(() => {}).then(async () => {
+      try { await settings.save({ [name]: value }); saved = { ...saved, [name]: value }; status.textContent = 'Appearance saved'; }
+      catch (error) { status.textContent = error.message; render(saved); }
+    });
+  }
+  for (const [name, field] of Object.entries(fields)) field.addEventListener('change', () => {
+    if (rendering) return;
+    const value = field.type === 'checkbox' ? field.checked : name === 'fontSize' ? Number(field.value) : field.value;
+    if (name === 'enabled') for (const [key, other] of Object.entries(fields)) if (key !== 'enabled') other.disabled = !value;
+    save(name, value);
+  });
+  document.getElementById('appearance-reset').addEventListener('click', () => {
+    chain = chain.catch(() => {}).then(async () => {
+      try { await settings.reset(); saved = settings.DEFAULTS; render(saved); status.textContent = 'Appearance reset'; }
+      catch (error) { status.textContent = error.message; render(saved); }
+    });
+  });
+  chrome.tabs.query({ active: true, currentWindow: true }).then(async ([tab]) => {
+    const state = await chrome.tabs.sendMessage(tab.id, { type: 'getThemeStatus' });
+    pageStatus.textContent = state.applied ? 'Modern view is active on this page.' : state.reason === 'disabled' ? 'Modern view is off.' : 'This page uses the original RFD layout.';
+  }).catch(() => { pageStatus.textContent = 'Open or reload an RFD forum tab to apply the extension.'; });
+})();

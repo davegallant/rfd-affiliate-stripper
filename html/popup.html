@@ -2,11 +2,29 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>rfd-affiliate-stripper</title>
+    <title>rfd-enhancement-suite</title>
     <link rel="stylesheet" href="../css/popup.css" />
   </head>
   <body>
-    <h1>RFD Affiliate Stripper</h1>
+    <h1>RFD Enhancement Suite</h1>
+    <section id="appearance-section" aria-labelledby="appearance-heading">
+      <h2 id="appearance-heading">Appearance</h2>
+      <label class="check"><input id="modern-enabled" type="checkbox" /> Modern view</label>
+      <p class="hint">Appearance changes only. Link cleaning stays active.</p>
+      <p id="theme-page-status" role="status"></p>
+      <form id="appearance-form">
+        <label for="modern-theme">Theme</label><select id="modern-theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select>
+        <label for="modern-density">Density</label><select id="modern-density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select>
+        <label for="modern-font-size">Post text size</label><select id="modern-font-size"><option value="16">16 px</option><option value="18">18 px</option><option value="20">20 px</option></select>
+        <label for="modern-content-width">Content width</label><select id="modern-content-width"><option value="standard">Standard</option><option value="wide">Wide</option></select>
+        <label class="check"><input id="modern-hide-promotions" type="checkbox" /> Hide promotions</label>
+        <label class="check"><input id="modern-hide-signatures" type="checkbox" /> Hide signatures</label>
+        <label class="check"><input id="modern-compact-profiles" type="checkbox" /> Compact author details</label>
+      </form>
+      <button id="appearance-reset" type="button">Reset appearance</button>
+      <p id="appearance-status" role="status" aria-live="polite"></p>
+    </section>
+    <h2>Link cleaning</h2>
     <p id="activity-count" role="status">Loading page activity…</p>
     <details>
       <summary>Recent cleaned links</summary>
@@ -29,6 +47,8 @@
     <button id="reset-button">Reset</button>
     <div id="status-message" role="status"></div>
     <script src="../js/stripRedirect.js"></script>
+    <script src="../js/theme/settings.js"></script>
+    <script src="../js/popupAppearance.js"></script>
     <script type="module" src="../js/popup.js"></script>
   </body>
 </html>
