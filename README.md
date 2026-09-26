@@ -8,7 +8,7 @@ The 1.0.0 changes described below are currently available from source; the store
 
 ## Appearance
 
-Modern view applies to Hot Deals card listings and discussion threads. It uses the available page width and hides the sidebar on both pages by default. It keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory, classic list and unknown page layouts retain RFD's native appearance.
+Modern view applies to Hot Deals card listings and discussion threads. It uses the available page width and hides the sidebar on both pages by default. Classic Hot Deals lists keep their native rows and controls while the sidebar setting works there too. The extension keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory and unknown page layouts retain RFD's native appearance.
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
@@ -18,7 +18,7 @@ Modern view applies to Hot Deals card listings and discussion threads. It uses t
 | Post text size | 16 px | Choose 18 or 20 px. |
 | Desktop page gutters | 24 px | Choose 12 px for less side padding. |
 | Hide promotions | On | Hide recognized ads and sponsored placements, including pencil ads. This changes display; it does not block requests. |
-| Hide sidebar | On | Hide sidebars on deal lists and threads and use the freed space. Turn it off to restore RFD's sidebar spacing. |
+| Hide sidebar | On | Hide sidebars on card lists, classic Hot Deals lists and threads, using the freed space. Turn it off to restore RFD's sidebar spacing. |
 | Hide signatures | On | Hide verified forum signature blocks. |
 | Hide join date, posts and upvotes | Off | Optionally hide those author statistics; names, ranks and location remain. |
 
