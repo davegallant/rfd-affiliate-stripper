@@ -8,7 +8,7 @@
   });
   chrome.runtime.sendMessage({ type: 'getRedirects' }, (response) => {
     if (chrome.runtime.lastError) {
-      console.log('rfd-affiliate-stripper:', chrome.runtime.lastError.message);
+      console.log('rfd-enhancement-suite:', chrome.runtime.lastError.message);
       return;
     }
     if (!response?.redirects) return;

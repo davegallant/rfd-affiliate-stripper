@@ -6,7 +6,7 @@ Date: 2026-09-26. Status: proposed design for implementation handoff; no product
 
 Expand this extension into a calmer, modern interface for RedFlagDeals while retaining its affiliate-link cleaning. The user requested inspiration from Modern for Hacker News and explicitly selected **deal lists and discussion threads first**. Success means scanning deals and reading conversations with less visual clutter, while existing forum workflows remain usable.
 
-Assumptions selected for this handoff: retain the extension identity and store IDs; ship appearance on by default with a persistent off switch; prioritize desktop with responsive narrow layouts; retain native navigation, ordering, pagination and posting behavior. These are recommended defaults, not additional preferences stated by the user. The plan is ready to review and hand off without a separate implementation design interview.
+Assumptions selected for this handoff: retain the extension identity and store IDs; ship appearance on by default with a persistent off switch; prioritize desktop with responsive narrow layouts; retain native navigation, ordering, pagination and posting behavior. The user later explicitly chose the name `rfd-enhancement-suite`, default-on appearance and an off switch for link-cleaning-only use; other defaults are recommendations. The plan is ready to review and hand off without a separate implementation design interview.
 
 ## Evidence and limits
 

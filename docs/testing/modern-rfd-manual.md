@@ -19,6 +19,6 @@ On a current RFD forum list and thread in Brave/Chromium and Firefox:
 - Signed in: enter a disposable draft and preview, inspect quote, voting, report, subscribe and edit controls. Do not submit votes, reports or posts merely for the smoke check.
 - Check modal and editor layering, inline images/tables/quotes/spoilers, and old/classic listing fallback.
 - Firefox Android requires a separate device check. Desktop responsive testing does not establish Android support.
-- Verify signatures on a live thread before enabling signature hiding; its current control has no effect on unverified signature markup.
+- Verify Hide signatures on a live thread with a signature. The verified `div.signature[id^="sig"]` selector is used; other markup remains visible.
 
 Record date, browser build, OS, page URL type (avoid private URLs), pass/fail and screenshots before store submission. Resolve failures before publishing.

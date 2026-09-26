@@ -149,3 +149,6 @@ h2 { font-size: 16px; margin: 16px 0 8px; }
 #appearance-form select { width: 100%; background: var(--surface-input); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 5px; }
 #appearance-reset { margin-top: 12px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface-input); color: var(--text); }
 #appearance-status, #theme-page-status { font-size: 13px; color: var(--text-muted); }
+
+#link-tools { border-top: 1px solid var(--border); padding-top: 12px; }
+#link-tools summary { font-weight: 600; margin-bottom: 12px; }

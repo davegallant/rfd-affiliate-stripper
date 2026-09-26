@@ -1,3 +1,9 @@
+## Unreleased
+
+- Rename the extension to RFD Enhancement Suite and add a default-on, reversible Modern view for deal lists and discussion threads.
+- Add appearance controls to the popup; turning the view off keeps affiliate-link cleaning active.
+- Add Chromium and Firefox fixture rendering checks and a Brave unpacked-loading recipe.
+
 # Changelog
 
 ## 0.8.1 - 2026-09-22

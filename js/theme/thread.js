@@ -7,6 +7,7 @@
       journal.setAttribute(post, 'data-rfdm-role', 'post');
       for (const body of post.querySelectorAll('.post_body .post_content')) journal.setAttribute(body, 'data-rfdm-role', 'post-body');
       for (const item of post.querySelectorAll('.post_profilearea :is(.profile_datejoined, .profile_numposts, .profile_upvotes)')) journal.setAttribute(item, 'data-rfdm-role', 'profile-stats');
+      for (const signature of post.querySelectorAll('.post_body div.signature[id^="sig"]')) journal.setAttribute(signature, 'data-rfdm-role', 'signature');
     }
   }
   api.thread = { enhance };

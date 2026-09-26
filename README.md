@@ -1,10 +1,25 @@
-# RFD Affiliate Stripper
+# RFD Enhancement Suite
 
-Remove affiliate redirects and tracking parameters from deal links on [RedFlagDeals forums](https://forums.redflagdeals.com/). The extension cleans supported links as a page loads and when new posts or links appear, so you can follow the destination directly. It can also help with redirect links that fail when an ad blocker is enabled.
+Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a calmer interface for Hot Deals lists and discussion threads, while cleaning supported affiliate redirects and tracking parameters from deal links. Modern view is on by default and can be turned off in the popup or with **Original view** on the page. Link cleaning remains active when appearance is off.
 
 [Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Install for Chrome](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
 <img src="docs/images/popup.png" alt="Extension popup showing one cleaned link, the link tester, and the configuration URL" width="425">
+
+## Appearance
+
+Modern view applies to supported deal card listings and discussion threads. It uses a compact, readable layout while preserving the forum's native links, filters, pagination, posting controls and thread order. The popup lets you choose System/Light/Dark, comfortable or compact density, post text size, content width, promotion visibility and compact author details. The signature toggle hides verified RFD signature blocks while leaving unknown markup visible.
+
+The extension retains RFD's original layout on search, account, profile, forum directory, classic-list and unknown templates. **Original view** and the popup's **Modern view** switch restore the native appearance immediately; they do not turn off link cleaning. Promotion hiding changes page display and does not block requests.
+
+### Quick test in Brave
+
+1. Open `brave://extensions` and turn on **Developer mode**.
+2. Select **Load unpacked** and choose the worktree folder that contains `manifest.json` (for this implementation, `/Users/dave/src/github.com/davegallant/rfd-affiliate-stripper-modern`). No build or package is needed.
+3. Open or reload `https://forums.redflagdeals.com/hot-deals-f9/`, then open a deal thread. The new view should appear by default.
+4. Use the extension's toolbar popup to turn **Modern view** off or change the theme. Reload the extension on `brave://extensions` and refresh the forum tab after editing source files.
+
+To test stripping by itself, turn **Modern view** off and open a thread with a supported affiliate link. The popup's **Cleaned links** count still reports rewrites.
 
 ## How it works
 
@@ -34,6 +49,8 @@ To run the checks and build a package in `web-ext-artifacts/`:
 
 ```sh
 npm test
+npx playwright install chromium firefox
+npm run test:browser
 npm run lint
 npm run build
 ```

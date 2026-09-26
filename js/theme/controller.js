@@ -33,7 +33,9 @@
           try { await api.settings.save({ enabled: false }); }
           catch { const note = document.createElement('span'); note.setAttribute('role', 'status'); note.textContent = 'Could not save appearance setting'; button.after(note); }
         });
-        journal.appendOwned(document.querySelector('#partition_forums') || document.body, button);
+        const buttonParent = match.root.parentElement || document.body;
+        journal.appendOwned(buttonParent, button);
+        if (match.root.parentElement === buttonParent) buttonParent.insertBefore(button, match.root);
         status = { enabled: true, applied: true, page: match.kind, reason: null };
       } catch (error) {
         clear();
@@ -70,7 +72,6 @@
         journal.prune();
       });
     });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
     const stopSettings = api.settings.subscribe(settings => { generation++; apply(settings); });
     const mediaChanged = () => { if (current?.enabled && current.theme === 'system') apply(current); };
     media.addEventListener('change', mediaChanged);
@@ -79,6 +80,7 @@
     async function ready() {
       if (document.readyState === 'loading') await new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }));
       if (!active) return;
+      if (document.documentElement) observer.observe(document.documentElement, { childList: true, subtree: true });
       const started = generation;
       try { const settings = await api.settings.load(); if (started === generation && active) apply(settings); }
       catch { if (started === generation && active) { clear(); status = { enabled: false, applied: false, page: 'unsupported', reason: 'settings-error' }; } }

@@ -36,3 +36,14 @@ test('new row root and nested row are both enhanced', () => {
   h.api.list.enhance(wrap, h.api.settings.DEFAULTS, journal);
   assert.equal(row.getAttribute('data-rfdm-role'), 'deal-row'); h.dispose();
 });
+test('verified sponsored card is hidden as one placement while organic cards remain', () => {
+  const h = fixture(), root = h.document.querySelector('#forum-topics');
+  const sponsored = root.querySelector('li.topic-card').cloneNode(true);
+  sponsored.querySelector('a.topic-card-info').classList.add('sponsored-offer');
+  sponsored.querySelector('.thread_info_block').insertAdjacentHTML('beforeend','<span class="sponsored-badge">Sponsored</span>');
+  root.querySelector('ul').append(sponsored);
+  const journal = h.api.dom.createJournal(); h.api.list.enhance(root,h.api.settings.DEFAULTS,journal);
+  assert.equal(sponsored.getAttribute('data-rfdm-sponsored'),'true');
+  assert.equal(root.querySelector('li.topic-card').getAttribute('data-rfdm-role'),'deal-row');
+  h.dispose();
+});

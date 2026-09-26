@@ -52,3 +52,16 @@ test('journal restores only its own attributes and nodes', () => {
   assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
   h.dispose();
 });
+test('document-start startup tolerates a missing document root', async () => {
+  const h = page('list-card');
+  h.document.documentElement.remove();
+  assert.doesNotThrow(() => h.api.controller.start(h.document, h.window));
+  h.dispose();
+});
+test('recovery control appears before supported content', async () => {
+  const h = page('list-card');
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  const button = h.document.querySelector('.rfdm-original-view');
+  assert.equal(button.nextElementSibling, h.document.querySelector('#forum-topics'));
+  stop(); h.dispose();
+});
