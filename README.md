@@ -17,7 +17,7 @@ Modern view applies to Hot Deals card listings and discussion threads. It uses t
 | Density | Comfortable | Choose tighter deal rows with Compact. |
 | Post text size | 16 px | Choose 18 or 20 px. |
 | Desktop page gutters | 24 px | Choose 12 px for less side padding. |
-| Hide promotions | On | Hide recognized ads and sponsored placements, including pencil ads. This changes display; it does not block requests. |
+| Hide promotions and sponsored threads | On | Hide recognized ads, sponsored placements and labeled sponsored threads in both Hot Deals list layouts, including pencil ads. This changes display; it does not block requests. |
 | Hide sidebar | On | Hide sidebars on card lists, classic Hot Deals lists and threads, using the freed space. Turn it off to restore RFD's sidebar spacing. |
 | Hide signatures | On | Hide verified forum signature blocks. |
 | Hide join date, posts and upvotes | Off | Optionally hide those author statistics; names, ranks and location remain. |

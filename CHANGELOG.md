@@ -14,7 +14,7 @@
 
 - Use the available page width on supported lists and threads, with sidebars hidden by default and restorable from the popup. Classic Hot Deals lists retain their native rows and controls while gaining the sidebar switch.
 - Keep author statistics visible by default and preserve RFD's own timestamp and emoji sizing.
-- Hide recognized sponsored placements and pencil ads when **Hide promotions** is on.
+- Hide recognized sponsored placements, labeled sponsored threads and pencil ads when **Hide promotions and sponsored threads** is on.
 - Leave search, account, profile, forum directory and unknown layouts in their native view.
 
 ### Fixed

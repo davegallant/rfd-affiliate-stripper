@@ -24,7 +24,7 @@
           'hide-promotions': String(settings.hidePromotions), 'hide-sidebar': String(settings.hideSidebar), 'hide-signatures': String(settings.hideSignatures), 'compact-profiles': String(settings.compactProfiles) };
         for (const name of attributes) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
         api.adapters.enhanceShell(document, match, journal);
-        if (match.kind === 'list') api.list?.enhance(match.root, settings, journal);
+        if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(match.root, settings, journal);
         if (match.kind === 'thread') api.thread?.enhance(match.root, settings, journal);
         status = { enabled: true, applied: true, page: match.kind, reason: null };
       } catch (error) {
@@ -56,7 +56,7 @@
         for (const node of roots) {
           if (!node.isConnected || !match.root.contains(node)) continue;
           try {
-            if (match.kind === 'list') api.list?.enhance(node, current, journal);
+            if (match.kind === 'list' || match.kind === 'classic-list') api.list?.enhance(node, current, journal);
             if (match.kind === 'thread') api.thread?.enhance(node, current, journal);
           } catch (error) { console.warn('RFD Modern view:', error); }
         }
