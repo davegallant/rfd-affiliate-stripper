@@ -1,10 +1,26 @@
-## Unreleased
-
-- Rename the extension to RFD Enhancement Suite and add a default-on, reversible Modern view for deal lists and discussion threads.
-- Add appearance controls to the popup; turning the view off keeps affiliate-link cleaning active.
-- Add Chromium and Firefox fixture rendering checks and a Brave unpacked-loading recipe.
-
 # Changelog
+
+## 1.0.0 - Unreleased
+
+### Added
+
+- Rename the extension to RFD Enhancement Suite.
+- Add a default-on Modern view for Hot Deals card listings and discussion threads, with an **Original view** button and a popup switch to restore RFD's native layout.
+- Add System, Light and Dark themes; row density, post text size and desktop gutter controls; and switches for promotions, sidebars, signatures and author statistics.
+- Add an independent, default-on **Clean links on forum pages** switch. Turning it off stops rewrites and restores links the extension changed when the site has not changed them since.
+- Add Chromium and Firefox rendering fixtures and instructions for loading the source extension in Brave.
+
+### Changed
+
+- Use the available page width on supported lists and threads, with sidebars hidden by default and restorable from the popup.
+- Keep author statistics visible by default and preserve RFD's own timestamp and emoji sizing.
+- Hide recognized sponsored placements and pencil ads when **Hide promotions** is on.
+- Leave search, account, profile, forum directory, classic list and unknown layouts in their native view.
+
+### Fixed
+
+- Reapply Modern view when supported forum content is replaced dynamically, while preserving the user's appearance settings.
+- Restore the main column's width after hiding RFD's sidebar, including the sidebar nested inside Hot Deals filters.
 
 ## 0.8.1 - 2026-09-22
 

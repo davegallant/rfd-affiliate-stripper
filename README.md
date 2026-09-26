@@ -1,36 +1,48 @@
 # RFD Enhancement Suite
 
-Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a calmer interface for Hot Deals lists and discussion threads, while cleaning supported affiliate redirects and tracking parameters from deal links. Modern view and link cleaning are both on by default, with separate switches in the popup. **Original view** on the page turns off appearance changes only.
+Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a simpler interface for Hot Deals lists and discussion threads, and clean supported affiliate redirects and tracking parameters from forum links. Modern view and link cleaning are independent and both on by default.
 
-[Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Install for Chrome](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
+[Firefox store listing](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Chrome store listing](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
-<img src="docs/images/popup.png" alt="Extension popup showing one cleaned link, the link tester, and the configuration URL" width="425">
+The 1.0.0 changes described below are currently available from source; the store listings may still offer an earlier release.
 
 ## Appearance
 
-Modern view applies to supported deal card listings and discussion threads. It uses the full page width and hides the sidebar on both pages by default. The popup's **Hide sidebar** switch restores it when turned off. The view preserves the forum's native links, filters, pagination, posting controls and thread order. The popup also lets you choose System/Light/Dark, comfortable or compact density, post text size, desktop page gutters, promotion visibility and optional compact author details. Timestamps retain RFD's styling, and author details are visible by default. The signature toggle hides verified RFD signature blocks while leaving unknown markup visible.
+Modern view applies to Hot Deals card listings and discussion threads. It uses the available page width and hides the sidebar on both pages by default. It keeps RFD's links, filters, pagination, posting controls, thread order, timestamps and emoji sizing. Search, account, profile, forum directory, classic list and unknown page layouts retain RFD's native appearance.
 
-The extension retains RFD's original layout on search, account, profile, forum directory, classic-list and unknown templates. **Original view** and the popup's **Modern view** switch restore the native appearance immediately. The separate **Clean links on forum pages** switch controls link rewriting. Promotion hiding changes page display and does not block requests.
+| Popup control | Default | Effect |
+| --- | --- | --- |
+| Modern view | On | Apply the new layout on supported lists and threads. **Original view** on the page turns this off. |
+| Theme | System | Follow the browser theme, or choose Light or Dark. |
+| Density | Comfortable | Choose tighter deal rows with Compact. |
+| Post text size | 16 px | Choose 18 or 20 px. |
+| Desktop page gutters | 24 px | Choose 12 px for less side padding. |
+| Hide promotions | On | Hide recognized ads and sponsored placements, including pencil ads. This changes display; it does not block requests. |
+| Hide sidebar | On | Hide sidebars on deal lists and threads and use the freed space. Turn it off to restore RFD's sidebar spacing. |
+| Hide signatures | On | Hide verified forum signature blocks. |
+| Hide join date, posts and upvotes | Off | Optionally hide those author statistics; names, ranks and location remain. |
+
+Appearance settings persist across supported tabs. **Reset appearance** restores only these defaults. Turning Modern view off leaves link cleaning at its own setting.
 
 ### Quick test in Brave
 
 1. Open `brave://extensions` and turn on **Developer mode**.
-2. Select **Load unpacked** and choose the worktree folder that contains `manifest.json` (for this implementation, `/Users/dave/src/github.com/davegallant/rfd-affiliate-stripper-modern`). No build or package is needed.
+2. Select **Load unpacked** and choose this checkout's folder, the one containing `manifest.json`. No build or package is needed.
 3. Open or reload `https://forums.redflagdeals.com/hot-deals-f9/`, then open a deal thread. The new view should appear by default.
-4. Use the extension's toolbar popup to turn **Modern view** off or change the theme. Reload the extension on `brave://extensions` and refresh the forum tab after editing source files.
+4. Use the popup to switch Modern view, the sidebar and link cleaning independently. After editing source files, reload the extension on `brave://extensions` and refresh the forum tab.
 
-To test stripping by itself, turn **Modern view** off and leave **Clean links on forum pages** on. To use only the visual changes, turn link cleaning off; previously rewritten links on the open page are restored when possible.
+To use link cleaning alone, turn **Modern view** off. To use only the visual changes, turn **Clean links on forum pages** off.
 
 ## How it works
 
-On `forums.redflagdeals.com`, the extension checks links in posts against its [redirect rules](redirects.json). For example, a `go.redirectingat.com` link containing an encoded Amazon product URL is replaced with the direct `amazon.ca/dp/...` link. Amazon rules also remove selected tracking parameters while preserving unrelated query values, seller and variant information, and URL fragments. Search keywords remain on Amazon search pages.
+When link cleaning is on, the extension checks forum post links against its [redirect rules](redirects.json). For example, a `go.redirectingat.com` link containing an encoded Amazon product URL is replaced with the direct `amazon.ca/dp/...` link. Amazon rules also remove selected tracking parameters while preserving unrelated query values, seller and variant information, and URL fragments. Search keywords remain on Amazon search pages.
 
-Only matching links are changed. If you installed the extension while an RFD tab was already open, reload that tab to start cleaning links and see its activity in the popup.
+Only matching links are changed. Turning cleaning off stops new rewrites and restores links previously changed by the extension when the site has not changed them since. Turning it back on resumes cleaning. If you installed the extension while an RFD tab was already open, reload that tab to activate it.
 
 ## Using the popup
 
-- **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and resets on reload.
-- **Clean links on forum pages:** Turn off automatic link rewriting without changing Modern view. The extension restores links it rewrote on open pages when those links have not since changed on the site. Turning it back on resumes cleaning.
+- **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and clears when link cleaning is turned off or the page reloads.
+- **Clean links on forum pages:** Controls automatic rewrites independently of Modern view. It is on by default.
 - **Test a link:** Paste an HTTP or HTTPS URL to preview the result and each rule applied. The tester does not open the destination. It reports invalid URLs and warns if cleaning stops at a cycle or the 20-step limit.
 - **Rules status:** Shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
 - **Config URL:** Enter the URL of a trusted JSON rules file and select **Save** to validate and use it. **Reset** restores the default URL. Reload open forum pages after changing rules; the popup tester uses the current rules immediately.
@@ -81,6 +93,8 @@ The project began as a [Tampermonkey](https://www.tampermonkey.net/) userscript.
 ## Store publishing
 
 The [publish workflow](.github/workflows/publish.yaml) runs for `v*` tags and can be started manually with an existing tag. The tag must match the version in [manifest.json](manifest.json). It runs tests and linting, builds the package, and submits to stores whose credentials are configured. Store review may still be required before a version becomes public.
+
+Before tagging `v1.0.0`, complete the [live browser release checks](docs/testing/modern-rfd-manual.md), set the manifest version to `1.0.0`, and replace **Unreleased** in the [changelog](CHANGELOG.md) with the release date. Preparing these notes does not publish a new version.
 
 Complete the store listings in their dashboards, then add these GitHub Actions secrets:
 
