@@ -12,7 +12,7 @@ Modern view applies to Hot Deals card listings and discussion threads. It uses t
 
 | Popup control | Default | Effect |
 | --- | --- | --- |
-| Modern view | On | Apply the new layout on supported lists and threads. **Original view** on the page turns this off. |
+| Modern view | On | Apply the new layout on supported lists and threads. Turn it off here to restore RFD's layout. |
 | Theme | System | Follow the browser theme, or choose Light or Dark. |
 | Density | Comfortable | Choose tighter deal rows with Compact. |
 | Post text size | 16 px | Choose 18 or 20 px. |

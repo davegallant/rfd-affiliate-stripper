@@ -4,7 +4,7 @@
   let status = { enabled: false, applied: false, page: 'unsupported', reason: 'disabled' };
   function getStatus() { return { ...status }; }
   function start(document, window) {
-    let active = true, generation = 0, current = null, match = null, forceNative = false;
+    let active = true, generation = 0, current = null, match = null;
     let journal = api.dom.createJournal();
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     function clear() { journal.restore(); journal = api.dom.createJournal(); }
@@ -13,8 +13,8 @@
       clear();
       current = settings;
       match = api.adapters.detect(document, new URL(window.location.href));
-      if (!settings.enabled || forceNative || !match) {
-        status = { enabled: settings.enabled, applied: false, page: match?.kind || 'unsupported', reason: settings.enabled && !forceNative ? 'unsupported' : 'disabled' };
+      if (!settings.enabled || !match) {
+        status = { enabled: settings.enabled, applied: false, page: match?.kind || 'unsupported', reason: settings.enabled ? 'unsupported' : 'disabled' };
         return;
       }
       try {
@@ -26,22 +26,6 @@
         api.adapters.enhanceShell(document, match, journal);
         if (match.kind === 'list') api.list?.enhance(match.root, settings, journal);
         if (match.kind === 'thread') api.thread?.enhance(match.root, settings, journal);
-        const button = document.createElement('button');
-        button.type = 'button'; button.className = 'rfdm-original-view'; button.textContent = 'Original view';
-        button.addEventListener('click', async () => {
-          clear(); current = { ...current, enabled: false };
-          status = { enabled: false, applied: false, page: match.kind, reason: 'disabled' };
-          try { await api.settings.save({ enabled: false }); }
-          catch {
-            forceNative = true;
-            const note = document.createElement('span'); note.setAttribute('role', 'status');
-            note.textContent = 'Could not save appearance setting';
-            journal.appendOwned(buttonParent, note);
-          }
-        });
-        const buttonParent = match.root.parentElement || document.body;
-        journal.appendOwned(buttonParent, button);
-        if (match.root.parentElement === buttonParent) buttonParent.insertBefore(button, match.root);
         status = { enabled: true, applied: true, page: match.kind, reason: null };
       } catch (error) {
         clear();
@@ -81,7 +65,6 @@
     });
     const stopSettings = api.settings.subscribe(settings => {
       generation++;
-      if (!settings.enabled) forceNative = false;
       apply(settings);
     });
     const mediaChanged = () => { if (current?.enabled && current.theme === 'system') apply(current); };

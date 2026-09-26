@@ -50,7 +50,7 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
       await page.evaluate(() => { document.documentElement.setAttribute('data-theme','dark'); });
       await page.evaluate(() => window.RFDModern.settings.save({theme:'dark'}));
       await expect(page.locator('html')).toHaveAttribute('data-rfdm-theme','dark');
-      await page.getByRole('button',{name:'Original view'}).click();
+      await page.evaluate(() => window.RFDModern.settings.save({enabled:false}));
       await expect(page.locator('html')).not.toHaveAttribute('data-rfdm-enabled','true');
       await expect(page.locator('html')).toHaveAttribute('data-theme','dark');
     }

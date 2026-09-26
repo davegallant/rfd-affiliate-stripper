@@ -5,7 +5,7 @@
 ### Added
 
 - Rename the extension to RFD Enhancement Suite.
-- Add a default-on Modern view for Hot Deals card listings and discussion threads, with an **Original view** button and a popup switch to restore RFD's native layout.
+- Add a default-on Modern view for Hot Deals card listings and discussion threads, with a popup switch to restore RFD's native layout.
 - Add System, Light and Dark themes; row density, post text size and desktop gutter controls; and switches for promotions, sidebars, signatures and author statistics.
 - Add an independent, default-on **Clean links on forum pages** switch. Turning it off stops rewrites and restores links the extension changed when the site has not changed them since.
 - Add Chromium and Firefox rendering fixtures and instructions for loading the source extension in Brave.

@@ -11,14 +11,14 @@ test('appearance can be disabled while preserving native theme', async () => {
   assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
   await h.api.settings.save({ enabled: true, theme: 'light' }); await h.flush();
   assert.equal(h.document.documentElement.getAttribute('data-rfdm-theme'), 'light');
-  assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 1);
+  assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 0);
   await h.api.settings.save({ enabled: false }); await h.flush();
   assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
   assert.equal(h.document.documentElement.getAttribute('data-theme'), 'dark');
   assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 0);
   stop(); h.dispose();
 });
-test('system theme reacts to OS and repeated toggles keep one recovery control', async () => {
+test('system theme reacts to OS and repeated toggles', async () => {
   const h = page('thread', { 'rfdm.enabled': true });
   const stop = h.api.controller.start(h.document, h.window); await h.flush();
   assert.equal(h.document.documentElement.getAttribute('data-rfdm-theme'), 'light');
@@ -26,7 +26,7 @@ test('system theme reacts to OS and repeated toggles keep one recovery control',
   assert.equal(h.document.documentElement.getAttribute('data-rfdm-theme'), 'dark');
   for (let i = 0; i < 3; i++) { await h.api.settings.save({ enabled: false }); await h.api.settings.save({ enabled: true }); }
   await h.flush();
-  assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 1);
+  assert.equal(h.document.querySelectorAll('[data-rfdm-owned]').length, 0);
   stop(); h.dispose();
 });
 test('unsupported page and storage error retain native presentation', async () => {
@@ -57,21 +57,4 @@ test('document-start startup tolerates a missing document root', async () => {
   h.document.documentElement.remove();
   assert.doesNotThrow(() => h.api.controller.start(h.document, h.window));
   h.dispose();
-});
-test('recovery control appears before supported content', async () => {
-  const h = page('list-card');
-  const stop = h.api.controller.start(h.document, h.window); await h.flush();
-  const button = h.document.querySelector('.rfdm-original-view');
-  assert.equal(button.nextElementSibling, h.document.querySelector('#forum-topics'));
-  stop(); h.dispose();
-});
-test('failed Original view save stays off locally and shows a visible error', async () => {
-  const h = page('list-card', {}, { failWrite: true });
-  const stop = h.api.controller.start(h.document, h.window); await h.flush();
-  h.document.querySelector('.rfdm-original-view').click(); await h.flush();
-  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
-  assert.match(h.document.querySelector('[role="status"]')?.textContent || '', /Could not save appearance setting/);
-  h.setDark(true); await h.flush();
-  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
-  stop(); h.dispose();
 });

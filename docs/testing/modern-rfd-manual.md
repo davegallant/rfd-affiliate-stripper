@@ -5,7 +5,7 @@ Implementation worktree: `codex/modern-rfd`. Automated runs use sanitized, offli
 ## Completed locally
 
 - Node regression suite: 117 tests after review fixes, verified 2026-09-26.
-- Playwright fixture rendering: Chromium and Firefox at 390, 768 and 1440 px for list/thread. Checks activation, row compactness, no page overflow, native theme restoration and an Original view click.
+- Playwright fixture rendering: Chromium and Firefox at 390, 768 and 1440 px for list/thread. Checks activation, row compactness, no page overflow and native theme restoration after turning Modern view off.
 - Saved public forum HTML from 2026-09-26 had 43 deal rows recognized when rendered offline with the site's public CSS. Its scripts were removed, so interactive controls were not validated.
 - Headless live RFD navigation did not reach DOM ready or a visible `#forum-topics` within 20/12 seconds respectively. Do not treat this as a site defect or an extension pass/fail.
 
@@ -13,7 +13,7 @@ Implementation worktree: `codex/modern-rfd`. Automated runs use sanitized, offli
 
 On a current RFD forum list and thread in Brave/Chromium and Firefox:
 
-- Confirm Modern view is initially on and the page has no major layout breakage. Check menus, filters, sort, pagination, search, post anchors and Original view recovery.
+- Confirm Modern view is initially on and the page has no major layout breakage. Check menus, filters, sort, pagination, search, post anchors and recovery through the popup switch.
 - Toggle System/Light/Dark, Compact, width and 20 px text. Cross-check the site's own dark-mode setting. Test at narrow width, 200% zoom and keyboard focus.
 - Confirm page-local cleaned links still rewrite while appearance is off.
 - Signed in: enter a disposable draft and preview, inspect quote, voting, report, subscribe and edit controls. Do not submit votes, reports or posts merely for the smoke check.
