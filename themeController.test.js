@@ -65,3 +65,13 @@ test('recovery control appears before supported content', async () => {
   assert.equal(button.nextElementSibling, h.document.querySelector('#forum-topics'));
   stop(); h.dispose();
 });
+test('failed Original view save stays off locally and shows a visible error', async () => {
+  const h = page('list-card', {}, { failWrite: true });
+  const stop = h.api.controller.start(h.document, h.window); await h.flush();
+  h.document.querySelector('.rfdm-original-view').click(); await h.flush();
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
+  assert.match(h.document.querySelector('[role="status"]')?.textContent || '', /Could not save appearance setting/);
+  h.setDark(true); await h.flush();
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
+  stop(); h.dispose();
+});

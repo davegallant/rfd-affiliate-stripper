@@ -28,6 +28,14 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
       expect(await row.evaluate(el => getComputedStyle(el).listStyleType)).toBe('none');
       expect((await row.boundingBox()).height).toBeLessThan(160);
     }
+    if (pageType === 'thread-rich' && width === 390) await page.evaluate(() => {
+      const row = document.querySelector('.post_content table tr');
+      for (let i = 0; i < 60; i++) { const cell = document.createElement('td'); cell.textContent = 'Wide'; row.append(cell); }
+    });
+    if (pageType === 'thread-rich' && width === 390) {
+      const tableScroll = await page.locator('.post_content table').evaluate(el => el.scrollWidth - el.clientWidth);
+      expect(tableScroll).toBeGreaterThan(0);
+    }
     const scroll = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(scroll).toBeLessThanOrEqual(1);
     await page.screenshot({path:`test-results/${pageType}-${width}.png`,fullPage:true});

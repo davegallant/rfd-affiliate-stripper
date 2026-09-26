@@ -30,6 +30,7 @@ test('reset affects appearance only and subscription ignores unrelated changes',
   await h.window.chrome.storage.local.set({ config: 'new' });
   assert.equal(events.length, 0);
   await h.window.chrome.storage.local.set({ 'rfdm.theme': 'light' });
+  await h.flush();
   assert.equal(events.at(-1).theme, 'light');
   await h.api.settings.reset();
   assert.equal(h.storage.config, 'new');
@@ -43,4 +44,16 @@ test('storage failures reject', async () => {
   const w = start({ failWrite: true });
   await assert.rejects(w.api.settings.save({ enabled: true }), /unavailable/);
   w.dispose();
+});
+test('a partial storage change retains all previously saved preferences', async () => {
+  const h = start({ initial: { 'rfdm.enabled': false, 'rfdm.theme': 'dark', 'rfdm.density': 'compact' } });
+  const events = [];
+  const stop = h.api.settings.subscribe(value => events.push(value));
+  await h.flush();
+  await h.api.settings.save({ fontSize: 18 });
+  assert.equal(events.at(-1).enabled, false);
+  assert.equal(events.at(-1).theme, 'dark');
+  assert.equal(events.at(-1).density, 'compact');
+  assert.equal(events.at(-1).fontSize, 18);
+  stop(); h.dispose();
 });

@@ -4,7 +4,7 @@
   let status = { enabled: false, applied: false, page: 'unsupported', reason: 'disabled' };
   function getStatus() { return { ...status }; }
   function start(document, window) {
-    let active = true, generation = 0, current = null, match = null;
+    let active = true, generation = 0, current = null, match = null, forceNative = false;
     let journal = api.dom.createJournal();
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     function clear() { journal.restore(); journal = api.dom.createJournal(); }
@@ -13,8 +13,8 @@
       clear();
       current = settings;
       match = api.adapters.detect(document, new URL(window.location.href));
-      if (!settings.enabled || !match) {
-        status = { enabled: settings.enabled, applied: false, page: match?.kind || 'unsupported', reason: settings.enabled ? 'unsupported' : 'disabled' };
+      if (!settings.enabled || forceNative || !match) {
+        status = { enabled: settings.enabled, applied: false, page: match?.kind || 'unsupported', reason: settings.enabled && !forceNative ? 'unsupported' : 'disabled' };
         return;
       }
       try {
@@ -29,9 +29,15 @@
         const button = document.createElement('button');
         button.type = 'button'; button.className = 'rfdm-original-view'; button.textContent = 'Original view';
         button.addEventListener('click', async () => {
-          clear(); status = { enabled: false, applied: false, page: match.kind, reason: 'disabled' };
+          clear(); current = { ...current, enabled: false };
+          status = { enabled: false, applied: false, page: match.kind, reason: 'disabled' };
           try { await api.settings.save({ enabled: false }); }
-          catch { const note = document.createElement('span'); note.setAttribute('role', 'status'); note.textContent = 'Could not save appearance setting'; button.after(note); }
+          catch {
+            forceNative = true;
+            const note = document.createElement('span'); note.setAttribute('role', 'status');
+            note.textContent = 'Could not save appearance setting';
+            journal.appendOwned(buttonParent, note);
+          }
         });
         const buttonParent = match.root.parentElement || document.body;
         journal.appendOwned(buttonParent, button);
@@ -61,6 +67,7 @@
       window.requestAnimationFrame(() => {
         scheduled = false;
         if (!active || !current?.enabled || !match) { added.clear(); return; }
+        if (!match.root.isConnected) { added.clear(); apply(current); return; }
         const roots = [...added]; added.clear();
         for (const node of roots) {
           if (!node.isConnected || !match.root.contains(node)) continue;
@@ -72,7 +79,11 @@
         journal.prune();
       });
     });
-    const stopSettings = api.settings.subscribe(settings => { generation++; apply(settings); });
+    const stopSettings = api.settings.subscribe(settings => {
+      generation++;
+      if (!settings.enabled) forceNative = false;
+      apply(settings);
+    });
     const mediaChanged = () => { if (current?.enabled && current.theme === 'system') apply(current); };
     media.addEventListener('change', mediaChanged);
     const message = (request, sender, respond) => { if (request?.type === 'getThemeStatus') respond(getStatus()); };

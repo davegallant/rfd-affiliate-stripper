@@ -21,3 +21,20 @@ test('unsupported replacement restores native appearance', async () => {
   assert.equal(h.api.controller.getStatus().reason,'unsupported');
   stop(); h.dispose();
 });
+test('root replacement during a queued insertion restores native view', async () => {
+  const h = loadThemeFixture('list-card', { scripts });
+  const frames = [];
+  h.window.requestAnimationFrame = callback => { frames.push(callback); return frames.length; };
+  const stop = h.api.controller.start(h.document,h.window); await h.flush();
+  const root = h.document.querySelector('#forum-topics');
+  const row = root.querySelector('li.topic-card').cloneNode(true);
+  root.querySelector('ul').append(row);
+  await new Promise(resolve => h.window.setTimeout(resolve, 0));
+  assert.ok(frames.length > 0);
+  root.remove();
+  await new Promise(resolve => h.window.setTimeout(resolve, 0));
+  while (frames.length) frames.shift()();
+  assert.equal(h.document.documentElement.hasAttribute('data-rfdm-enabled'), false);
+  assert.equal(h.api.controller.getStatus().reason, 'unsupported');
+  stop(); h.dispose();
+});

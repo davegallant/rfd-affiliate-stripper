@@ -4,7 +4,7 @@ Implementation worktree: `codex/modern-rfd`. Automated runs use sanitized, offli
 
 ## Completed locally
 
-- Node regression suite: 111 tests after dynamic-update additions; result and date to be refreshed at final verification.
+- Node regression suite: 117 tests after review fixes, verified 2026-09-26.
 - Playwright fixture rendering: Chromium and Firefox at 390, 768 and 1440 px for list/thread. Checks activation, row compactness, no page overflow, native theme restoration and an Original view click.
 - Saved public forum HTML from 2026-09-26 had 43 deal rows recognized when rendered offline with the site's public CSS. Its scripts were removed, so interactive controls were not validated.
 - Headless live RFD navigation did not reach DOM ready or a visible `#forum-topics` within 20/12 seconds respectively. Do not treat this as a site defect or an extension pass/fail.

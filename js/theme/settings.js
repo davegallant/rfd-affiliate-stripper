@@ -31,17 +31,24 @@
   }
   async function reset() { await chrome.storage.local.remove([...allKeys, PREFIX + 'schemaVersion']); }
   function subscribe(fn) {
-    let current = normalize();
+    let current = null;
+    let pending = {};
     let active = true;
     const listener = (changes, area) => {
       if (!active || area !== 'local') return;
       const patch = {};
       for (const name of names) if (Object.hasOwn(changes, PREFIX + name)) patch[name] = changes[PREFIX + name].newValue;
       if (!Object.keys(patch).length) return;
-      current = normalize({ ...current, ...patch });
-      fn(current);
+      if (current === null) pending = { ...pending, ...patch };
+      else { current = normalize({ ...current, ...patch }); fn(current); }
     };
     chrome.storage.onChanged.addListener(listener);
+    load().catch(() => normalize()).then(value => {
+      if (!active) return;
+      current = normalize({ ...value, ...pending });
+      if (Object.keys(pending).length) fn(current);
+      pending = {};
+    });
     return () => { active = false; chrome.storage.onChanged.removeListener(listener); };
   }
   api.settings = { DEFAULTS, normalize, load, save, reset, subscribe };
