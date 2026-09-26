@@ -20,8 +20,15 @@ for (const pageType of ['list-card', 'thread-rich']) for (const width of [390, 7
     });
     await page.goto(pageType === 'list-card' ? 'https://forums.redflagdeals.com/hot-deals-f9/' : 'https://forums.redflagdeals.com/example-1/');
     for (const source of sources) await page.addScriptTag({ path:resolve(source) });
+    await page.addStyleTag({ content:'#site_content .forums_layout > .primary_content { width: calc(100% - 320px); float: left; } .with_sidebar .primary_content { padding-right: 21.875rem; width: 100%; } #site_content .forums_layout > .sidebar_content { width: 300px; float: right; }' });
     await page.addStyleTag({ path:resolve('css/forum-theme.css') });
     await expect(page.locator('html')).toHaveAttribute('data-rfdm-enabled','true');
+    if (width === 1440) {
+      expect((await page.locator('#site_content').boundingBox()).width).toBeGreaterThanOrEqual(1390);
+      expect((await page.locator('.primary_content').boundingBox()).width).toBeGreaterThanOrEqual(1300);
+      expect((await page.locator(pageType === 'list-card' ? '#forum-topics' : '#thread').boundingBox()).width).toBeGreaterThanOrEqual(1300);
+      await expect(page.locator('#trending_hotdeals_threads')).toBeHidden();
+    }
     await expect(page.locator('[data-rfdm-role="deal-row"], [data-rfdm-role="post"]')).not.toHaveCount(0);
     if (pageType === 'list-card') {
       const row = page.locator('[data-rfdm-role="deal-row"]').first();
