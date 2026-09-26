@@ -21,7 +21,7 @@
 - Keep `js/content.js` at `document_end`; add a separate ordered theme script entry at `document_start` with bundled scoped CSS.
 - Package all scripts/styles locally. No remote CSS, fonts, scripts, analytics, content uploads or custom-CSS field.
 - No replacement application, cloned posts, recreated forms, navigation interception, request blocking or remote selector service.
-- Appearance is off by default on both installs and upgrades. Original view disables appearance globally without disabling cleaning.
+- Appearance is on by default on both installs and upgrades. Original view disables appearance globally without disabling cleaning.
 - Do not modify generated userscript files for theming; do not rename extension IDs, repository or publishing credentials.
 - Preserve pre-existing changes/untracked files. Do not publish, tag or submit live forum actions as part of validation.
 
@@ -62,7 +62,7 @@ Use JSDoc types for these contracts, defined in `settings.js` / `adapters.js`; n
 
 ```text
 Settings = {
-  enabled: boolean,                         // false
+  enabled: boolean,                         // true
   theme: 'system' | 'light' | 'dark',         // system
   density: 'comfortable' | 'compact',        // comfortable
   fontSize: 16 | 18 | 20,                    // 16
@@ -236,7 +236,7 @@ RFDModern.controller.getStatus(): ThemeStatus
 - [ ] Review diff for broad selectors, hidden real content, site-owned node deletion, accidental URL modification, remote assets, unnecessary permissions and unrelated changes. Use the requested execution workflow's review gate; do not claim independent review if none occurred.
 - [ ] Summarize delivered files, supported templates, test results, outstanding release gates and remaining product assumptions. Commit coherent tasks only following the repository commit skill if commits are part of the implementation workflow; do not include unrelated pre-existing artifacts.
 
-**Acceptance:** A locally buildable, opt-in extension with documented actual coverage. Publishing remains a separate action; unverified platform or authenticated cases stay visible in the release checklist.
+**Acceptance:** A locally buildable, default-on extension with documented actual coverage. Publishing remains a separate action; unverified platform or authenticated cases stay visible in the release checklist.
 
 ## Milestones and stopping rules
 
@@ -251,4 +251,4 @@ Execute sequentially. If context becomes tight, finish the current task, update 
 
 ## Copy/paste prompt for GPT-6-sol
 
-> Implement the Modern RFD plan in this repository. First read `docs/superpowers/specs/2026-09-26-modern-rfd-design.md` and `docs/superpowers/plans/2026-09-26-modern-rfd.md`, then inspect the current branch and repository instructions. I want the v1 scope described there: deal lists and threads, opt-in modern theming, reversible clutter reduction, existing RFD actions and affiliate cleaning preserved. Use the documented defaults and execute tasks inline in order. Update task checkboxes with actual evidence. Do not redesign the architecture or add unrelated features. Verify actual DOM selectors, use offline fixtures for automated tests, and distinguish fixture tests from live browser/authenticated checks. Preserve pre-existing work. Complete all independently possible implementation and validation; report inaccessible checks as release gates. Do not publish, tag a release or submit live forum actions.
+> Implement the Modern RFD plan in this repository. First read `docs/superpowers/specs/2026-09-26-modern-rfd-design.md` and `docs/superpowers/plans/2026-09-26-modern-rfd.md`, then inspect the current branch and repository instructions. I want the v1 scope described there: deal lists and threads, default-on modern theming, reversible clutter reduction, existing RFD actions and affiliate cleaning preserved. Use the documented defaults and execute tasks inline in order. Update task checkboxes with actual evidence. Do not redesign the architecture or add unrelated features. Verify actual DOM selectors, use offline fixtures for automated tests, and distinguish fixture tests from live browser/authenticated checks. Preserve pre-existing work. Complete all independently possible implementation and validation; report inaccessible checks as release gates. Do not publish, tag a release or submit live forum actions.

@@ -1,0 +1,27 @@
+@media screen {
+  html[data-rfdm-enabled="true"] {
+    --rfdm-bg: #f6f7f9;
+    --rfdm-surface: #fff;
+    --rfdm-text: #20242c;
+    --rfdm-muted: #596273;
+    --rfdm-border: #d9dee7;
+    --rfdm-link: #075cc9;
+    --rfdm-accent: #b42332;
+    color-scheme: light;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-theme="dark"] {
+    --rfdm-bg: #111317;
+    --rfdm-surface: #191d23;
+    --rfdm-text: #edf0f5;
+    --rfdm-muted: #aab3c2;
+    --rfdm-border: #343c49;
+    --rfdm-link: #82b8ff;
+    --rfdm-accent: #ff8993;
+    color-scheme: dark;
+  }
+  html[data-rfdm-enabled="true"] body.rfd_forums { background: var(--rfdm-bg); color: var(--rfdm-text); font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+  html[data-rfdm-enabled="true"] .rfdm-original-view { display: block; margin: 8px 0 16px auto; padding: 8px 12px; border: 1px solid var(--rfdm-border); border-radius: 6px; background: var(--rfdm-surface); color: var(--rfdm-text); cursor: pointer; }
+  html[data-rfdm-enabled="true"] :is(a, button, input, textarea, select):focus-visible { outline: 2px solid var(--rfdm-accent); outline-offset: 2px; }
+  html[data-rfdm-enabled="true"][data-rfdm-hide-promotions="true"] [data-rfdm-role="promotion"] { display: none !important; }
+}
+@media print { .rfdm-original-view { display: none !important; } }

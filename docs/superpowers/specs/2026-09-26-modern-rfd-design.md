@@ -6,7 +6,7 @@ Date: 2026-09-26. Status: proposed design for implementation handoff; no product
 
 Expand this extension into a calmer, modern interface for RedFlagDeals while retaining its affiliate-link cleaning. The user requested inspiration from Modern for Hacker News and explicitly selected **deal lists and discussion threads first**. Success means scanning deals and reading conversations with less visual clutter, while existing forum workflows remain usable.
 
-Assumptions selected for this handoff: retain the extension identity and store IDs; ship appearance as an opt-in first release; prioritize desktop with responsive narrow layouts; retain native navigation, ordering, pagination and posting behavior. These are recommended defaults, not additional preferences stated by the user. The plan is ready to review and hand off without a separate implementation design interview.
+Assumptions selected for this handoff: retain the extension identity and store IDs; ship appearance on by default with a persistent off switch; prioritize desktop with responsive narrow layouts; retain native navigation, ordering, pagination and posting behavior. These are recommended defaults, not additional preferences stated by the user. The plan is ready to review and hand off without a separate implementation design interview.
 
 ## Evidence and limits
 
@@ -82,7 +82,7 @@ Hiding ads is cosmetic; this feature does not promise to block ad/tracker reques
 
 Place “Modern view” first in the popup. Show controls with explicit labels and native form elements:
 
-- Modern view: off by default for both new and existing installations in the initial release.
+- Modern view: on by default for both new and existing installations in the initial release.
 - Theme: System (default), Light, Dark.
 - Density: Comfortable (default), Compact.
 - Text size: 16 (default), 18, 20 px for post bodies.
@@ -153,6 +153,6 @@ The [Chrome storage API](https://developer.chrome.com/docs/extensions/reference/
 
 V1 contains supported card deal lists and ordinary threads, appearance settings, reversible cleanup and regressions. Empty lists must remain usable. Login, profile, inbox, account settings, dedicated compose screens, search results, forum directory, print views and unknown templates remain native. A recognized thread's embedded composer still has to work. Additional list variants are admitted only with their own fixtures and checks.
 
-Later increments may support classic listings, search results and forum directory, then profiles/account screens. Further reading aids (quote collapse, hide-user filters, bookmarks, read history, new-reply markers) need separate requirements. Do not silently expand v1 into these features or rename/rebrand the project.
+Later increments may support classic listings, search results and forum directory, then profiles/account screens. Further reading aids (quote collapse, hide-user filters, bookmarks, read history, new-reply markers) need separate requirements. Do not silently expand v1 into these features. Rename the extension display name and packaged artifacts to `rfd-enhancement-suite`; preserve browser extension IDs and repository remote.
 
-Release only after actual Chrome and Firefox rendering checks and authenticated manual smoke checks. Use fixtures for mutations and actions that should not submit to live RFD. Preserve existing extension IDs and rule storage. Ship initial appearance off; explain the new switch in README/changelog and store copy. Store publication and version tagging are a separate explicit step.
+Release only after actual Chrome and Firefox rendering checks and authenticated manual smoke checks. Use fixtures for mutations and actions that should not submit to live RFD. Preserve existing extension IDs and rule storage. Ship initial appearance on; explain the new switch in README/changelog and store copy. Store publication and version tagging are a separate explicit step.

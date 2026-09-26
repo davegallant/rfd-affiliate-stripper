@@ -5,7 +5,7 @@ function start(options) { return loadThemeFixture('list-card', options); }
 test('missing and corrupt settings use safe defaults', async () => {
   const h = start({ initial: { 'rfdm.enabled': 'true', 'rfdm.theme': 'sepia', 'rfdm.fontSize': 17, 'rfdm.hidePromotions': false } });
   const settings = await h.api.settings.load();
-  assert.equal(settings.enabled, false);
+  assert.equal(settings.enabled, true);
   assert.equal(settings.theme, 'system');
   assert.equal(settings.fontSize, 16);
   assert.equal(settings.hidePromotions, false);
@@ -33,7 +33,7 @@ test('reset affects appearance only and subscription ignores unrelated changes',
   assert.equal(events.at(-1).theme, 'light');
   await h.api.settings.reset();
   assert.equal(h.storage.config, 'new');
-  assert.equal((await h.api.settings.load()).enabled, false);
+  assert.equal((await h.api.settings.load()).enabled, true);
   stop(); h.dispose();
 });
 test('storage failures reject', async () => {
