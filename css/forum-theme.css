@@ -51,3 +51,27 @@
     html[data-rfdm-enabled="true"][data-rfdm-page="list"] .forum-filter-form { flex-wrap: wrap; }
   }
 }
+@media screen {
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #site_content { max-width: 920px; margin-inline: auto; padding-inline: 24px; background: var(--rfdm-bg); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-width="wide"] #site_content { max-width: 1120px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #partition_forums { min-width: 0; width: 100%; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread { min-width: 0; color: var(--rfdm-text); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] { margin: 0 0 16px; padding: 24px; border: 1px solid var(--rfdm-border); border-radius: 6px; background: var(--rfdm-surface); color: var(--rfdm-text); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > .thread_original_post { border-top: 3px solid var(--rfdm-accent); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread .thread_title { font-size: 26px; line-height: 1.35; overflow-wrap: anywhere; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] { max-width: min(100%, 78ch); font-size: 16px; line-height: 1.65; overflow-wrap: anywhere; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-width="wide"] [data-rfdm-role="post-body"] { max-width: min(100%, 90ch); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-font-size="18"] [data-rfdm-role="post-body"] { font-size: 18px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-font-size="20"] [data-rfdm-role="post-body"] { font-size: 20px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] img { max-width: 100%; height: auto; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] :is(pre, table) { max-width: 100%; overflow-x: auto; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] [data-rfdm-role="post-body"] blockquote { border-left: 3px solid var(--rfdm-border); padding-left: 12px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] .post_profilearea .avatar img { max-width: 32px; max-height: 32px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-compact-profiles="true"] [data-rfdm-role="profile-stats"],
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-hide-signatures="true"] [data-rfdm-role="signature"] { display: none !important; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] .post_dateline { color: var(--rfdm-muted); font-size: 13px; }
+  @media (max-width: 767px) {
+    html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #site_content { padding-inline: 12px; }
+    html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] { padding: 16px 12px; }
+  }
+}

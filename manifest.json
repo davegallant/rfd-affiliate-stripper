@@ -13,6 +13,7 @@
         "js/theme/dom.js",
         "js/theme/adapters.js",
         "js/theme/list.js",
+        "js/theme/thread.js",
         "js/theme/controller.js",
         "js/theme/bootstrap.js"
       ],
