@@ -10,7 +10,7 @@
 
 **Spec:** [Modern RFD design brief](../specs/2026-09-26-modern-rfd-design.md).
 
-**Status:** Planning artifact, not executed. User confirmed deal lists and threads first. Remaining design choices are explicit recommendations in the spec. First inspect current git state; do not mistake this document for evidence that implementation or tests already exist.
+**Status:** Implemented on branch `codex/modern-rfd` through commit `a45a011`. Tasks 1–6 and the code/documentation portions of Tasks 7–8 are delivered. The original checkboxes below remain as a historical task recipe, not a progress tracker. Automated verification: 117 Node tests, 12 Chromium/Firefox fixture checks, extension lint with 0 errors and 2 pre-existing warnings, and an inspected extension ZIP. Live signed-in RFD, actual extension loading in supported browser versions, and Firefox Android remain release gates; see `docs/testing/modern-rfd-manual.md`. User later chose the name `rfd-enhancement-suite`, default-on appearance and an off switch for link-cleaning-only use.
 
 ## Global Constraints
 
