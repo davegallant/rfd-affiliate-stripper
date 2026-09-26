@@ -41,7 +41,7 @@
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_main,
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_info_block { min-width: 0; }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_title { font-size: 18px; line-height: 1.4; font-weight: 600; white-space: normal; overflow-wrap: anywhere; color: var(--rfdm-link); }
-  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] :is(.dealer_name, .topic_time, .thread_meta_text, .thread_stat) { color: var(--rfdm-muted); font-size: 13px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] :is(.dealer_name, .thread_meta_text, .thread_stat) { color: var(--rfdm-muted); font-size: 13px; }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_image img { width: 56px; height: 56px; max-width: 56px; object-fit: contain; }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"][data-rfdm-density="compact"] [data-rfdm-role="deal-row"] { padding-block: 8px; }
   html[data-rfdm-enabled="true"][data-rfdm-page="list"][data-rfdm-density="compact"] [data-rfdm-role="deal-thumbnail"] { display: none; }
@@ -70,7 +70,6 @@
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] .post_profilearea .avatar img { max-width: 32px; max-height: 32px; }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-compact-profiles="true"] [data-rfdm-role="profile-stats"],
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"][data-rfdm-hide-signatures="true"] [data-rfdm-role="signature"] { display: none !important; }
-  html[data-rfdm-enabled="true"][data-rfdm-page="thread"] .post_dateline { color: var(--rfdm-muted); font-size: 13px; }
   @media (max-width: 767px) {
     html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #site_content { padding-inline: 12px; }
     html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] { padding: 16px 12px; }

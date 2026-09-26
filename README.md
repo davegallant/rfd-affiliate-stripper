@@ -8,7 +8,7 @@ Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a calmer interface 
 
 ## Appearance
 
-Modern view applies to supported deal card listings and discussion threads. It uses the full page width, hides the Trending Hot Deals sidebar, and preserves the forum's native links, filters, pagination, posting controls and thread order. The popup lets you choose System/Light/Dark, comfortable or compact density, post text size, desktop page gutters, promotion visibility and compact author details. The signature toggle hides verified RFD signature blocks while leaving unknown markup visible.
+Modern view applies to supported deal card listings and discussion threads. It uses the full page width, hides the Trending Hot Deals sidebar, and preserves the forum's native links, filters, pagination, posting controls and thread order. The popup lets you choose System/Light/Dark, comfortable or compact density, post text size, desktop page gutters, promotion visibility and optional compact author details. Timestamps retain RFD's styling, and author details are visible by default. The signature toggle hides verified RFD signature blocks while leaving unknown markup visible.
 
 The extension retains RFD's original layout on search, account, profile, forum directory, classic-list and unknown templates. **Original view** and the popup's **Modern view** switch restore the native appearance immediately; they do not turn off link cleaning. Promotion hiding changes page display and does not block requests.
 
