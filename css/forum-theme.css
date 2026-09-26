@@ -93,11 +93,13 @@
   html[data-rfdm-enabled="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout {
     width: 100%; max-width: none; display: flow-root;
   }
-  html[data-rfdm-enabled="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout > .primary_content {
+  html[data-rfdm-enabled="true"][data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout > .primary_content {
     float: none; width: 100% !important; max-width: none; margin: 0; padding-inline: 0; box-sizing: border-box;
   }
-  html[data-rfdm-enabled="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #trending_hotdeals_threads { display: none !important; }
-  html[data-rfdm-enabled="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout > :is(.sidebar_content, .ad_sidebar_bigbox) {
+  html[data-rfdm-enabled="true"][data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout .sidebar_content,
+  html[data-rfdm-enabled="true"][data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #partition_forums .forums_layout > .ad_sidebar_bigbox,
+  html[data-rfdm-enabled="true"][data-rfdm-hide-sidebar="true"]:is([data-rfdm-page="list"], [data-rfdm-page="thread"]) #trending_hotdeals_threads,
+  html[data-rfdm-enabled="true"][data-rfdm-hide-sidebar="true"][data-rfdm-page="list"] #partition_forums .forums_nav_sidebar_column {
     display: none !important;
   }
   html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread,

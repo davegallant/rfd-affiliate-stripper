@@ -1,6 +1,6 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const DEFAULTS = Object.freeze({ enabled: true, theme: 'system', density: 'comfortable', fontSize: 16, contentWidth: 'standard', hidePromotions: true, hideSignatures: true, compactProfiles: false });
+  const DEFAULTS = Object.freeze({ enabled: true, theme: 'system', density: 'comfortable', fontSize: 16, contentWidth: 'standard', hidePromotions: true, hideSidebar: true, hideSignatures: true, compactProfiles: false });
   const PREFIX = 'rfdm.';
   const names = Object.keys(DEFAULTS);
   const allKeys = names.map(name => PREFIX + name);
@@ -11,6 +11,7 @@
     fontSize: value => [16, 18, 20].includes(value),
     contentWidth: value => ['standard', 'wide'].includes(value),
     hidePromotions: value => typeof value === 'boolean',
+    hideSidebar: value => typeof value === 'boolean',
     hideSignatures: value => typeof value === 'boolean',
     compactProfiles: value => typeof value === 'boolean',
   };

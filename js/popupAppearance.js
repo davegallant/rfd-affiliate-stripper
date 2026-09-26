@@ -3,6 +3,7 @@
     enabled: document.getElementById('modern-enabled'), theme: document.getElementById('modern-theme'),
     density: document.getElementById('modern-density'), fontSize: document.getElementById('modern-font-size'),
     contentWidth: document.getElementById('modern-content-width'), hidePromotions: document.getElementById('modern-hide-promotions'),
+    hideSidebar: document.getElementById('modern-hide-sidebar'),
     hideSignatures: document.getElementById('modern-hide-signatures'), compactProfiles: document.getElementById('modern-compact-profiles'),
   };
   if (Object.values(fields).some(field => !field)) return;

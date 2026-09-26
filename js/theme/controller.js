@@ -1,6 +1,6 @@
 (() => {
   const api = globalThis.RFDModern ||= {};
-  const attributes = ['enabled', 'page', 'theme', 'density', 'font-size', 'width', 'hide-promotions', 'hide-signatures', 'compact-profiles'];
+  const attributes = ['enabled', 'page', 'theme', 'density', 'font-size', 'width', 'hide-promotions', 'hide-sidebar', 'hide-signatures', 'compact-profiles'];
   let status = { enabled: false, applied: false, page: 'unsupported', reason: 'disabled' };
   function getStatus() { return { ...status }; }
   function start(document, window) {
@@ -21,7 +21,7 @@
         const html = document.documentElement;
         const values = { enabled: 'true', page: match.kind, theme: settings.theme === 'system' ? (media.matches ? 'dark' : 'light') : settings.theme,
           density: settings.density, 'font-size': String(settings.fontSize), width: settings.contentWidth,
-          'hide-promotions': String(settings.hidePromotions), 'hide-signatures': String(settings.hideSignatures), 'compact-profiles': String(settings.compactProfiles) };
+          'hide-promotions': String(settings.hidePromotions), 'hide-sidebar': String(settings.hideSidebar), 'hide-signatures': String(settings.hideSignatures), 'compact-profiles': String(settings.compactProfiles) };
         for (const name of attributes) journal.setAttribute(html, 'data-rfdm-' + name, values[name]);
         api.adapters.enhanceShell(document, match, journal);
         if (match.kind === 'list') api.list?.enhance(match.root, settings, journal);
