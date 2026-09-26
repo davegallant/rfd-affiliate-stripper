@@ -18,7 +18,7 @@
   function enhanceShell(document, match, journal) {
     if (!match || !document.querySelector('#site_content')?.contains(match.root)) return;
     for (const ad of document.querySelectorAll('#site_content .ad_box, #site_content .ad_sponsored_deal, #header_leaderboard, #footer_leaderboard')) {
-      if (!ad.contains(match.root)) journal.setAttribute(ad, 'data-rfdm-role', 'promotion');
+      if (!ad.contains(match.root) && !ad.closest('li.topic-card.topic, article.thread_post')) journal.setAttribute(ad, 'data-rfdm-role', 'promotion');
     }
   }
   root.adapters = { SELECTORS, detect, enhanceShell };

@@ -25,3 +25,29 @@
   html[data-rfdm-enabled="true"][data-rfdm-hide-promotions="true"] [data-rfdm-role="promotion"] { display: none !important; }
 }
 @media print { .rfdm-original-view { display: none !important; } }
+@media screen {
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #site_content {
+    max-width: 1120px; margin-inline: auto; padding-inline: 24px; background: var(--rfdm-bg);
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"][data-rfdm-width="wide"] #site_content { max-width: 1360px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #partition_forums { min-width: 0; width: 100%; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="list"] {
+    background: var(--rfdm-surface); border: 1px solid var(--rfdm-border); border-radius: 6px; overflow: hidden;
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] {
+    min-width: 0; padding: 14px 16px; border: 0; border-bottom: 1px solid var(--rfdm-border); background: var(--rfdm-surface); color: var(--rfdm-text);
+  }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"]:last-child { border-bottom: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_main,
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_info_block { min-width: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_title { font-size: 18px; line-height: 1.4; font-weight: 600; white-space: normal; overflow-wrap: anywhere; color: var(--rfdm-link); }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] :is(.dealer_name, .topic_time, .thread_meta_text, .thread_stat) { color: var(--rfdm-muted); font-size: 13px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] .thread_image img { width: 56px; height: 56px; max-width: 56px; object-fit: contain; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"][data-rfdm-density="compact"] [data-rfdm-role="deal-row"] { padding-block: 8px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"][data-rfdm-density="compact"] [data-rfdm-role="deal-thumbnail"] { display: none; }
+  @media (max-width: 767px) {
+    html[data-rfdm-enabled="true"][data-rfdm-page="list"] #site_content { padding-inline: 12px; }
+    html[data-rfdm-enabled="true"][data-rfdm-page="list"] [data-rfdm-role="deal-row"] { padding-inline: 12px; }
+    html[data-rfdm-enabled="true"][data-rfdm-page="list"] .forum-filter-form { flex-wrap: wrap; }
+  }
+}
