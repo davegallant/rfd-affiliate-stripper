@@ -1,6 +1,6 @@
 # RFD Enhancement Suite
 
-Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a calmer interface for Hot Deals lists and discussion threads, while cleaning supported affiliate redirects and tracking parameters from deal links. Modern view is on by default and can be turned off in the popup or with **Original view** on the page. Link cleaning remains active when appearance is off.
+Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a calmer interface for Hot Deals lists and discussion threads, while cleaning supported affiliate redirects and tracking parameters from deal links. Modern view and link cleaning are both on by default, with separate switches in the popup. **Original view** on the page turns off appearance changes only.
 
 [Install for Firefox](https://addons.mozilla.org/en-US/firefox/addon/rfd-redirect-stripper/) · [Install for Chrome](https://chromewebstore.google.com/detail/rfd-affiliate-stripper/nhjomcijhonhoggkckbjjfnjdcefbblo)
 
@@ -10,7 +10,7 @@ Give [RedFlagDeals forums](https://forums.redflagdeals.com/) a calmer interface 
 
 Modern view applies to supported deal card listings and discussion threads. It uses the full page width and hides the sidebar on both pages by default. The popup's **Hide sidebar** switch restores it when turned off. The view preserves the forum's native links, filters, pagination, posting controls and thread order. The popup also lets you choose System/Light/Dark, comfortable or compact density, post text size, desktop page gutters, promotion visibility and optional compact author details. Timestamps retain RFD's styling, and author details are visible by default. The signature toggle hides verified RFD signature blocks while leaving unknown markup visible.
 
-The extension retains RFD's original layout on search, account, profile, forum directory, classic-list and unknown templates. **Original view** and the popup's **Modern view** switch restore the native appearance immediately; they do not turn off link cleaning. Promotion hiding changes page display and does not block requests.
+The extension retains RFD's original layout on search, account, profile, forum directory, classic-list and unknown templates. **Original view** and the popup's **Modern view** switch restore the native appearance immediately. The separate **Clean links on forum pages** switch controls link rewriting. Promotion hiding changes page display and does not block requests.
 
 ### Quick test in Brave
 
@@ -19,7 +19,7 @@ The extension retains RFD's original layout on search, account, profile, forum d
 3. Open or reload `https://forums.redflagdeals.com/hot-deals-f9/`, then open a deal thread. The new view should appear by default.
 4. Use the extension's toolbar popup to turn **Modern view** off or change the theme. Reload the extension on `brave://extensions` and refresh the forum tab after editing source files.
 
-To test stripping by itself, turn **Modern view** off and open a thread with a supported affiliate link. The popup's **Cleaned links** count still reports rewrites.
+To test stripping by itself, turn **Modern view** off and leave **Clean links on forum pages** on. To use only the visual changes, turn link cleaning off; previously rewritten links on the open page are restored when possible.
 
 ## How it works
 
@@ -30,6 +30,7 @@ Only matching links are changed. If you installed the extension while an RFD tab
 ## Using the popup
 
 - **Cleaned links:** Shows how many distinct links were cleaned on the current forum page. Expand **Recent cleaned links** to see up to 50 recent original and cleaned URL pairs. This history lives in the page's memory and resets on reload.
+- **Clean links on forum pages:** Turn off automatic link rewriting without changing Modern view. The extension restores links it rewrote on open pages when those links have not since changed on the site. Turning it back on resumes cleaning.
 - **Test a link:** Paste an HTTP or HTTPS URL to preview the result and each rule applied. The tester does not open the destination. It reports invalid URLs and warns if cleaning stops at a cycle or the 20-step limit.
 - **Rules status:** Shows the last successful rules update or an update error. Bundled rules are available before the first successful download and when there is no usable cached configuration.
 - **Config URL:** Enter the URL of a trusted JSON rules file and select **Save** to validate and use it. **Reset** restores the default URL. Reload open forum pages after changing rules; the popup tester uses the current rules immediately.
