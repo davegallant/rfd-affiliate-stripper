@@ -34,7 +34,8 @@
     "type": "module"
   },
   "permissions": [
-    "alarms"
+    "alarms",
+    "storage"
   ],
   "browser_specific_settings": {
     "gecko": {
