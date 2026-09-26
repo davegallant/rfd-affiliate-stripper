@@ -228,7 +228,7 @@ RFDModern.controller.getStatus(): ThemeStatus
 
 **Interfaces:** Existing `npm run build` remains the distribution entry point. Both GitHub build and publish packaging paths apply the same exclusions.
 
-- [ ] Document Modern view scope, opt-in default, settings, Original view recovery, cosmetic promotion hiding, unsupported templates and extension-only theming. Keep cleaner usage instructions accurate. Add before/after list/thread screenshots from a known sanitized or public page without private account data.
+- [ ] Document Modern view scope, default-on appearance, settings, Original view recovery, cosmetic promotion hiding, unsupported templates and extension-only theming. Keep cleaner usage instructions accurate. Add before/after list/thread screenshots from a known sanitized or public page without private account data.
 - [ ] Add an Unreleased changelog section. Keep current manifest version until a release version is deliberately chosen. Do not create a tag or submit to stores in this implementation task.
 - [ ] Extend all package ignore paths to exclude `test/**`, `playwright.config.cjs`, `test-results/**`, `playwright-report/**`, root `*.test.js`, docs and existing artifacts. Ensure dev dependencies/`node_modules` and private working metadata are absent from archives; inspect the actual archive rather than relying only on ignore patterns. Preserve runtime `js/theme/**` and `css/forum-theme.css`.
 - [ ] Add a packaging regression in `themeAdapters.test.js` or a dedicated `themePackage.test.js` if it is clearer: manifest references resolve; cleaner entry still ends at document_end; theme scripts are ordered and at document_start; storage is the only added permission. Do not enforce irrelevant whitespace/string matches.

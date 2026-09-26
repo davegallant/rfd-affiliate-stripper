@@ -75,3 +75,15 @@
     html[data-rfdm-enabled="true"][data-rfdm-page="thread"] #thread > .thread_posts > [data-rfdm-role="post"] { padding: 16px 12px; }
   }
 }
+@media screen {
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics .topics-cards { list-style: none; margin: 0; padding: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] { display: flow-root; list-style: none; width: auto; max-width: none; box-sizing: border-box; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] > a.thread_info { display: block; min-width: 0; text-decoration: none; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] > a.thread_info .thread_outer_header { display: none; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] .thread_info { display: flex; gap: 12px; min-width: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] .thread_image { flex: 0 0 56px; width: 56px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] .thread_info_block { flex: 1 1 auto; min-width: 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] .thread_footer { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] .thread_title { margin: 4px 0; }
+  html[data-rfdm-enabled="true"][data-rfdm-page="list"] #forum-topics [data-rfdm-role="deal-row"] .thread_header_right { float: right; margin-left: 12px; }
+}

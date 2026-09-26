@@ -1,3 +1,7 @@
 *.zip
 node_modules
 .direnv/
+
+.superpowers/
+test-results/
+playwright-report/
